@@ -109,7 +109,7 @@ Build the thin AND-gate resolver over a consumed PDP (Cedar via AuthZEN 1.0): a 
 
 **Acceptance:** an action missing any AND-gate leg is denied and logged; a high-value action produces a dry-run preview and suspends on a durable human-approval gate; an approved gate resumes to execute, a rejected gate stops and logs.
 
-### 0.F - S4 OTel -> hash-chain -> transparency log + Md.12/14 evidence pack v1
+### 0.F - S4 OTel -> hash-chain -> transparency log + Article 12/14 evidence pack v1
 
 Emit OTel events for every gate decision, hash-chain them, compute a Merkle root, and anchor to a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature, with Rekor v2 as the reference design. Canonicalize with RFC8785 JCS, sign with Ed25519, embed `kid` and the public key/cert so the witness is portable, and attach `policy_snapshot_ref` (the policy hash in force at decision time). Assemble the v1 evidence pack and map its fields to Article 12 (forensic reproducibility) and Article 14 (human oversight).
 

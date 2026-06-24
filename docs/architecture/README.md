@@ -32,5 +32,6 @@ Each pillar is canonical in exactly one file. The lifecycle and overview link to
 
 - **[build-vs-consume.md](build-vs-consume.md)** — the boundary, canonical.
 - **[integration-surfaces.md](integration-surfaces.md)** — the seam and the surfaces.
+- **[tech-stack-analysis.md](tech-stack-analysis.md)** — the per-layer technology evaluation (alternatives, 2026 maturity, sources).
 
 ADRs that pin these decisions live in [../decisions/README.md](../decisions/README.md). Architectural principles (fail-closed, deterministic-guarantee honesty, vendor neutrality) live in [../standards/architectural-principles.md](../standards/architectural-principles.md).

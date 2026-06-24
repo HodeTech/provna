@@ -15,7 +15,7 @@ Provna is sold into exactly one situation: an enterprise has a working agent tha
 Why this vertical and not the obvious adjacent ones:
 
 - **Errors are irreversible and pre-budgeted.** A wrong money movement cannot be un-sent, and the organization *already pays* for four-eyes / SOX controls — so the budget pool for "control the irreversible action" exists.
-- **It is the most date-stamped regulatory surface.** EU AI Act Article 12 (forensic reproducibility) and Article 14 (human oversight), plus DORA and MiFID, create a *recurring*, audit-cycle obligation — not a one-time deadline. UNVERIFIED whether any single calendar date is the forcing function; the durable forcing function is the per-audit, per-cycle evidence demand.
+- **It is the most date-stamped regulatory surface.** EU AI Act Article 12 (forensic reproducibility) and Article 14 (human oversight), plus DORA and MiFID II, create a *recurring*, audit-cycle obligation — not a one-time deadline. UNVERIFIED whether any single calendar date is the forcing function; the durable forcing function is the per-audit, per-cycle evidence demand.
 - **There is live demand pull.** Banks are deploying reconciliation / AP / close agents now, but there is no safe *write* layer — they sit read-only.
 - **Integration is idempotency-native.** Payment rails and ERPs already expose void / reversal / two-phase primitives, so the S2 compensation story has real surfaces to bind to.
 
@@ -59,7 +59,7 @@ flowchart TB
 - **Without Provna:** both options put the CISO personally on the hook; a probabilistic "the classifier catches 95%" is weak under audit.
 - **With Provna:** "yes, but behind the gate" — risk is transferred to architecture, not trust. Provna is a **risk-transfer instrument**; the escrow metaphor speaks the CISO's language and moves the conversation from "do we trust the agent?" to "do we trust the gate?" [OPINION]
 
-**Critical guardrail:** the S3 authorization market is saturated (CrowdStrike <- SGNL ~$740M). If you pitch the CISO "better authz," you get crushed by Okta / Entra / CrowdStrike. **The pitch to the CISO must lead with the S1+S2 fusion** (deterministic information-flow defense + reversible transactional action), which no identity vendor offers.
+**Critical guardrail:** the S3 authorization market is saturated (CrowdStrike acquired SGNL, ~$740M). If you pitch the CISO "better authz," you get crushed by Okta / Entra / CrowdStrike. **The pitch to the CISO must lead with the S1+S2 fusion** (deterministic information-flow defense + reversible transactional action), which no identity vendor offers.
 
 ### 2.3 Verifier — Internal Audit / SOX
 
@@ -97,6 +97,6 @@ The policy language and the SDK are open source — this earns developer trust a
 
 The developer-scale on-ramp. When a bank gives employees Claude Code, it can write to the prod DB and to real money. Provna attaches as a real **PreToolUse deny** hook plus an MCP proxy: a risky action (real money, prod migration, destructive command) stops for dry-run + approval; injection is blocked architecturally; everything is signed and anchored. The on-ramp is "govern in two lines" — Layer-0 audit-only but *signed + anchored* (not plain logging), Layer-1 policy (deny + dry-run), Layer-2 compensate; the developer earns trust by *observing* first, then turns on enforcement. The mechanics of these surfaces live in [../architecture/integration-surfaces.md](../architecture/integration-surfaces.md).
 
-**Honest limit of the wedge.** A PreToolUse deny *prevents* an action; compensation is for actions that *already happened*. On the Claude Code surface Provna's real power is **prevention** (S1 deny + risk gate) — some actions are prevented but cannot be undone. **Real compensation (the S2 moat) lives in the FS connectors** (Stripe void, NetSuite reversing-entry), where the inverse is recorded and round-trip-tested. In the wedge we never say "everything is reversible"; we say "risky actions are prevented, connector-backed actions are reversible."
+**Honest limit of the wedge.** A PreToolUse deny *prevents* an action; compensation is for actions that *already happened*. On the Claude Code surface Provna's real power is **prevention** (S1 deny + risk gate) — some actions are prevented but cannot be undone. **Real compensation (the S2 moat) lives in the FS connectors** (Stripe void, NetSuite reversing-entry), where the inverse is recorded and round-trip-tested. In the wedge we never say "everything is reversible"; we say "risky actions are prevented, connector-backed actions are reversed."
 
 **The wedge is not the customer.** The single-developer coding scenario is a distribution and adoption channel, not a paying account. The money is top-down; the wedge exists to get Provna inside and to prove value where the agent writes to production or financial systems. [OPINION] Whether this bottom-up wedge actually converts into top-down revenue is a hypothesis to be tested, not a proven motion.

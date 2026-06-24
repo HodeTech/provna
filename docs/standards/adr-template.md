@@ -1,6 +1,6 @@
 # ADR Template
 
-**Status: Accepted**
+**Status:** Accepted
 **Last updated: 2026-06-24**
 **Related:** [documentation-style.md](documentation-style.md), [architectural-principles.md](architectural-principles.md), [../decisions/README.md](../decisions/README.md)
 
@@ -13,8 +13,8 @@ Copy everything inside the fence into a new file.
 ```markdown
 # ADR-NNNN: Title
 
-**Status: Proposed | Accepted | Deprecated | Superseded by [ADR-NNNN](NNNN-slug.md)**
-**Date: YYYY-MM-DD**
+**Status:** Proposed | Accepted | Deprecated | Superseded by [ADR-NNNN](NNNN-slug.md)
+**Last updated: YYYY-MM-DD**
 **Related:** [../some/file.md](../some/file.md), [NNNN-other-decision.md](NNNN-other-decision.md)
 
 ## Context
@@ -55,7 +55,7 @@ instead.
   - `Accepted` — binding; the codebase and other docs must conform.
   - `Deprecated` — no longer recommended, but not replaced by a specific decision.
   - `Superseded by [ADR-NNNN](NNNN-slug.md)` — replaced by a newer decision; always carry the forward link.
-- **Date** — `YYYY-MM-DD`, the date the status last changed.
+- **Last updated** — `YYYY-MM-DD`, the date the status last changed.
 - **Related** — relative markdown links to files in the public tree only. Never link to anything outside it.
 
 ## Usage notes

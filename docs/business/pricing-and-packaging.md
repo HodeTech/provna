@@ -24,7 +24,7 @@ The value is created at the **action**, not at the **seat**. A reconciliation ag
 |---|---|
 | Land | ~$60-150K (first connector, first action type, shadow-mode -> first enforced contract) |
 | Expand | $500K+ (more connectors, more finance-ops surfaces, more governed-action volume, premium IFC tier) |
-| ACV | $80-250K |
+| ACV | $80-250K (blended average across the base — first lands plus early expansion; sits above Land and trends up toward Expand as accounts mature) |
 
 **The anchor:** Microsoft Agent 365 is priced around ~$15/user/month (a platform, per-seat). UNVERIFIED as a current price point. We anchor *against* it deliberately: Provna is not a per-user platform fee, it is per-governed-action permission. The comparison reframes the buyer away from "how many seats" toward "how many irreversible actions do you need to be allowed to make, and what is the cancellation cost of the project if you cannot?"
 

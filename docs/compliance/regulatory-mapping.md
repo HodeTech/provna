@@ -6,7 +6,7 @@
 
 This is the canonical home for how Provna's architecture maps onto the regulatory obligations that the ICP (EU-exposed financial-services back/mid-office) must satisfy. It is the **deal-unblocker dossier**: the Verifier persona (Internal Audit / SOX) does not buy Provna, but a single "no" from them kills the deal, and their "yes" is the precondition for the Economic Buyer's "yes". This document is what turns "we deployed an agent" into "we can prove, to a regulator, what the agent did, who authorized it, with which data, and that the record was not altered".
 
-Provna sells **permission to ship**, not security. The frame here is the same: each regulation below is a continuing obligation that recurs every audit cycle. Provna does not promise to make the deadline (the product is pre-build and the EU AI Act Article 12/14 application date of 2 Aug 2026 is imminent); it solves the **permanent** obligation that survives every deadline.
+Provna sells **permission to ship**, not security. The frame here is the same: each regulation below is a continuing obligation that recurs every audit cycle. Provna does not promise to make the deadline (the product is pre-build and the EU AI Act Article 12/14 application date (commonly cited as 2 Aug 2026, UNVERIFIED) is near-term); it solves the **permanent** obligation that survives every deadline.
 
 ---
 
@@ -44,7 +44,7 @@ Three architectural primitives carry almost every mapping below:
 
 ## A note on AIUC-1 and where primary legitimacy is anchored
 
-AIUC-1 is a relevant industry assurance mapping and Provna will map to it as a secondary signal. However, AIUC-1 has a **conflict-of-interest critique** UNVERIFIED, so Provna does **not** anchor its primary regulatory legitimacy there. Primary legitimacy is anchored to **ISO/IEC 42001 + the EU AI Act** (Articles 12 and 14), with DORA and MiFID as the continuing financial-services forcing-functions. AIUC-1 is mapped, not relied upon.
+AIUC-1 is a relevant industry assurance mapping and Provna will map to it as a secondary signal. However, AIUC-1 has a **conflict-of-interest critique** UNVERIFIED, so Provna does **not** anchor its primary regulatory legitimacy there. Primary legitimacy is anchored to **ISO/IEC 42001 + the EU AI Act** (Articles 12 and 14), with DORA and MiFID II as the continuing financial-services forcing-functions. AIUC-1 is mapped, not relied upon.
 
 ## Two boundaries restated (do not let the dossier overreach)
 

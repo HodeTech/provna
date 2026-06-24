@@ -6,7 +6,7 @@
 
 ## Context
 
-The product is provisionally named **Provna**. The name is strong on the merits: the *prov-* root binds all four pillars in one word - **prove** (S1 IFC + S4 audit), **provenance** (S4 tamper-evident trail), **provision** (S3 authorization), **approve** (HITL / Md.14 human oversight). It is short (6 letters, 2 syllables), brandable, CISO-serious, and the tagline writes itself: *Provna - every agent action, proven.*
+The product is provisionally named **Provna**. The name is strong on the merits: the *prov-* root binds all four pillars in one word - **prove** (S1 IFC + S4 audit), **provenance** (S4 tamper-evident trail), **provision** (S3 authorization), **approve** (HITL / Article 14 human oversight). It is short (6 letters, 2 syllables), brandable, CISO-serious, and the tagline writes itself: *Provna - every agent action, proven.*
 
 The name is **not yet cleared**, and clearance is on the critical path before any irreversible commitment (brand assets, domains, repo/package namespaces, code identifiers). Two concrete risks must be resolved:
 

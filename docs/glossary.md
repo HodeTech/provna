@@ -28,7 +28,7 @@ This glossary defines the load-bearing terms used across Provna's documentation.
 
 **Biscuit** — A decentralized, attenuable token format (offline-verifiable, caveat-based) Provna can use for delegation. Adding a caveat irreversibly narrows authority. Context: S3 / delegation.
 
-**CAEP (Continuous Access Evaluation Profile)** — A standard for streaming access-change/session events between systems so authorization can be re-evaluated continuously. Relevant because the S3 market (SGNL <- CrowdStrike) is built around it; Provna aligns and consumes rather than competes. Context: S3 ecosystem.
+**CAEP (Continuous Access Evaluation Profile)** — A standard for streaming access-change/session events between systems so authorization can be re-evaluated continuously. Relevant because the S3 market (CrowdStrike acquired SGNL) is built around it; Provna aligns and consumes rather than competes. Context: S3 ecosystem.
 
 **CaMeL** — The dual-LLM isolation pattern Provna builds as the S1 core: a privileged P-LLM that plans and may call tools, and a quarantined Q-LLM that processes untrusted data, cannot call tools, and returns only typed values. Context: S1. See [architecture/pillar-1-information-flow-control.md](architecture/pillar-1-information-flow-control.md).
 
@@ -48,7 +48,7 @@ This glossary defines the load-bearing terms used across Provna's documentation.
 
 **Data-plane** — The inline, hot-path Policy Enforcement Point: the PEP, IFC engine, and action-contract logic that sit synchronously in front of every side-effecting call. Written in Go/Rust for latency. Contrast *control-plane*. See [tech-stack.md](tech-stack.md).
 
-**decide** — The first ActionGuard method: run the IFC gate, the AND-gate authorization, and risk tiering, returning a verdict (allow / block / require-approval / transform). Context: S1 + S3. See [architecture/action-lifecycle.md](architecture/action-lifecycle.md).
+**decide** — The first ActionGuard method: run the IFC gate, the AND-gate authorization, and risk tiering, returning a verdict (allow / block / require-approval / transform; transform = allow but with the arguments rewritten or narrowed first, e.g. redacting an untrusted field before the sink). Context: S1 + S3. See [architecture/action-lifecycle.md](architecture/action-lifecycle.md).
 
 **Delegation** — One axis of the AND-gate: authority passed from a user to an agent (and agent-to-agent), carried as an attenuable, verifiable credential chain with transitive revocation. Context: S3. See [architecture/pillar-3-runtime-authorization.md](architecture/pillar-3-runtime-authorization.md).
 
@@ -68,7 +68,7 @@ This glossary defines the load-bearing terms used across Provna's documentation.
 
 **EU AI Act Article 14** — Human-oversight obligation for high-risk AI; Provna maps it to the dry-run + HITL + four-eyes approval flow. Context: S3/S2 + compliance.
 
-**External anchor** — A third-party, independent attestation that a piece of evidence existed at a point in time (e.g. Rekor/Trillian transparency log + an RFC3161 timestamp), so even a key-holding insider cannot rewrite history consistently. Context: S4. See [architecture/pillar-4-tamper-evident-audit.md](architecture/pillar-4-tamper-evident-audit.md).
+**External anchor** — A third-party, independent attestation that a piece of evidence existed at a point in time, so even a key-holding insider cannot rewrite history consistently. Provna assembles this from a self-hosted Tessera transparency log + an internal RFC3161 TSA + a cross-organization witness cosignature (Rekor v2 is the reference design). Context: S4. See [architecture/pillar-4-tamper-evident-audit.md](architecture/pillar-4-tamper-evident-audit.md).
 
 **FIDES** — Microsoft's MIT-licensed, provider-agnostic Q-LLM-isolation + label-propagation library (shipped in `microsoft/agent-framework`) that Provna CONSUMES as the reference and prototype substrate for the S1 MVP PoC and AgentDojo eval. The real BUILD moat (inline fail-closed reference monitor, immutable label store, signed declassification node, per-connector sink-policy catalog, S1<->S4 forensic bridge) sits on top; FIDES-style typed constrained decoding is the default declassification channel. Context: S1 (CONSUME). See [architecture/tech-stack-analysis.md](architecture/tech-stack-analysis.md), [architecture/pillar-1-information-flow-control.md](architecture/pillar-1-information-flow-control.md).
 
@@ -108,9 +108,11 @@ This glossary defines the load-bearing terms used across Provna's documentation.
 
 **Merkle (root/tree)** — A tree of hashes whose root commits to a whole batch of audit records; publishing the root to an external anchor makes the entire batch tamper-evident with one attestation. Context: S4. See [architecture/pillar-4-tamper-evident-audit.md](architecture/pillar-4-tamper-evident-audit.md).
 
-**MiFID** — EU financial-markets regulation with record-keeping/reporting obligations Provna's S4 evidence pack maps to. Context: compliance. See [compliance/regulatory-mapping.md](compliance/regulatory-mapping.md).
+**MiFID II** — EU financial-markets regulation with record-keeping/reporting obligations Provna's S4 evidence pack maps to. Context: compliance. See [compliance/regulatory-mapping.md](compliance/regulatory-mapping.md).
 
 **ML-DSA (FIPS 204)** — The NIST-standardized post-quantum (lattice-based) digital-signature algorithm Provna can optionally apply to S4 audit signatures for long-retention evidence, hedging against future cryptographic obsolescence. Context: S4 (optional). See [architecture/tech-stack-analysis.md](architecture/tech-stack-analysis.md), [architecture/pillar-4-tamper-evident-audit.md](architecture/pillar-4-tamper-evident-audit.md).
+
+**MVAR** — A single-author, Apache-2.0 runtime-taint reference implementation (`mvar-security/mvar`): a real integrity x confidentiality dual-lattice with a two-layer fail-closed sink-gate. Provna treats it as a design reference (not a dependency); known gaps it must improve on are a mutable provenance node, no transactional/compensation side, and no external audit anchor — plus a US provisional patent (PATENT CAUTION: re-implement from prior art, avoid the brand). Context: S1 reference. See [architecture/pillar-1-information-flow-control.md](architecture/pillar-1-information-flow-control.md).
 
 **NIST AI RMF (AI Risk Management Framework)** — A voluntary US framework for managing AI risk; a mapping target for Provna's governance evidence alongside the EU regime. Context: compliance.
 

@@ -8,16 +8,16 @@ Phase 1 is where Provna stops being a single-connector, single-partner enforceme
 
 ```mermaid
 flowchart LR
-    P0["Phase 0-1 exit\nthreshold blocking live\nfirst paying contract\nSOC2 started"] --> P1
+    P0["Phase 0-1 exit<br/>threshold blocking live<br/>first paying contract<br/>SOC2 started"] --> P1
     subgraph P1["PHASE 1 - SCALE (6-12 mo)"]
         direction TB
-        W1["W1 finance-ops connector expansion\n(compensation flywheel scales)"]
-        W2["W2 production hardening\ninline PEP Go + DBOS + Cedar/biscuit\n+ Tessera/RFC3161-TSA/witness + K8s/Helm"]
-        W3["W3 OSS RELEASE\npolicy + SDK open / core proprietary"]
-        W4["W4 compliance path\nISO 42001 + EU AI Act + AIUC-1 mapping"]
-        W5["W5 VENDOR-NEUTRALITY PROOF\nLangChain + OpenAI-SDK + custom govern()"]
+        W1["W1 finance-ops connector expansion<br/>(compensation flywheel scales)"]
+        W2["W2 production hardening<br/>inline PEP Go + DBOS + Cedar/biscuit<br/>+ Tessera/RFC3161-TSA/witness + K8s/Helm"]
+        W3["W3 OSS RELEASE<br/>policy + SDK open / core proprietary"]
+        W4["W4 compliance path<br/>ISO 42001 + EU AI Act + AIUC-1 mapping"]
+        W5["W5 VENDOR-NEUTRALITY PROOF<br/>LangChain + OpenAI-SDK + custom govern()"]
     end
-    P1 --> P2["Phase 2 - Platform\nIFC premium tier\nsystem-of-record\nsecond vertical"]
+    P1 --> P2["Phase 2 - Platform<br/>IFC premium tier<br/>system-of-record<br/>second vertical"]
 ```
 
 ## Goal
@@ -67,11 +67,11 @@ Ordering reflects dependency and risk-retirement, not strict serialization - W1,
 
 ```mermaid
 flowchart TD
-    W2["W2 production hardening\n(inline PEP, DBOS, Cedar/biscuit,\nTessera/RFC3161-TSA/witness, K8s/Helm)"] --> W1
-    W1["W1 finance-ops connector expansion\n(compensation flywheel)"] --> W5
+    W2["W2 production hardening<br/>(inline PEP, DBOS, Cedar/biscuit,<br/>Tessera/RFC3161-TSA/witness, K8s/Helm)"] --> W1
+    W1["W1 finance-ops connector expansion<br/>(compensation flywheel)"] --> W5
     W2 --> W3["W3 OSS policy/SDK release"]
-    W3 --> W5["W5 vendor-neutrality proof\nLangChain + OpenAI-SDK + custom"]
-    W1 --> W4["W4 compliance path\nISO 42001 + EU AI Act + AIUC-1"]
+    W3 --> W5["W5 vendor-neutrality proof<br/>LangChain + OpenAI-SDK + custom"]
+    W1 --> W4["W4 compliance path<br/>ISO 42001 + EU AI Act + AIUC-1"]
     W4 --> EXIT["Exit gate"]
     W5 --> EXIT
 ```
@@ -120,12 +120,12 @@ flowchart TD
 
 ### W4 - Compliance path: ISO 42001 + EU AI Act + AIUC-1 mapping
 
-**What:** Build and publish a control mapping from Provna to the durable, externally-recognized frameworks: ISO 42001 (AI management system), EU AI Act Article 12 (forensic record-keeping / reproducibility) and Article 14 (human oversight), DORA and MiFID where relevant, and the AIUC-1 control set. Start the ISO 42001 implementation path. Continue SOC2 toward report. Anchor primary legitimacy in ISO 42001 + EU AI Act (the AIUC-1 mapping is a complement, not the primary legitimacy source - it carries a conflict-of-interest critique UNVERIFIED, so it is positioned as a mapping, not a seal).
+**What:** Build and publish a control mapping from Provna to the durable, externally-recognized frameworks: ISO 42001 (AI management system), EU AI Act Article 12 (forensic record-keeping / reproducibility) and Article 14 (human oversight), DORA and MiFID II where relevant, and the AIUC-1 control set. Start the ISO 42001 implementation path. Continue SOC2 toward report. Anchor primary legitimacy in ISO 42001 + EU AI Act (the AIUC-1 mapping is a complement, not the primary legitimacy source - it carries a conflict-of-interest critique UNVERIFIED, so it is positioned as a mapping, not a seal).
 
 **Why:** The Verifier persona (Internal Audit / SOX) is a veto. Bespoke compliance claims do not survive an audit cycle; recognized-framework mappings do. The forcing function is continuous (every audit cycle re-demands evidence; DORA obligations are ongoing), not a single calendar deadline.
 
 **Acceptance:**
-- A published mapping covering ISO 42001 + EU AI Act Art. 12/14 + DORA/MiFID + AIUC-1 exists in [../compliance/regulatory-mapping.md](../compliance/regulatory-mapping.md) and has been reviewed by at least one partner audit function.
+- A published mapping covering ISO 42001 + EU AI Act Art. 12/14 + DORA/MiFID II + AIUC-1 exists in [../compliance/regulatory-mapping.md](../compliance/regulatory-mapping.md) and has been reviewed by at least one partner audit function.
 - The ISO 42001 implementation path is started with a defined scope.
 - SOC2 has progressed materially toward a report.
 - The honest-guarantee boundary is preserved in all compliance materials: evidence is regulator-grade / forensic-reproducible; "court-admissible" remains case-by-case UNVERIFIED; the IFC guarantee statement (no implicit-flow / side-channel guarantee) is unchanged.
@@ -158,7 +158,7 @@ Phase-relative; durations indicative (pre-build).
 ## Dependencies
 
 - **Inbound (from [phase-0-1-enforcement.md](phase-0-1-enforcement.md)):** above-threshold blocking is live; adversarial actions are blocked and reversed; the compensation test-harness flywheel has started; the first paying contract exists; SOC2 has begun. Phase 1 scales these - it does not re-prove enforcement.
-- **Consumed technology (no rebuild):** DBOS (saga/durable substrate; Temporal kept as a seam-isolated contingency triggered only by multi-tenant fan-out / a Postgres ceiling / a buyer mandate, NOT a scheduled migration), Cedar/OpenFGA + AuthZEN 1.0 (PDP), OTel + Rekor/Trillian + RFC3161 (audit infrastructure), AgentDojo (eval). See [../architecture/build-vs-consume.md](../architecture/build-vs-consume.md) and [../tech-stack.md](../tech-stack.md). The build effort is confined to the white space: the IFC engine, the compensation library, the thin AND-gate resolver + attenuation, and the Article 12/14 evidence pack.
+- **Consumed technology (no rebuild):** DBOS (saga/durable substrate; Temporal kept as a seam-isolated contingency triggered only by multi-tenant fan-out / a Postgres ceiling / a buyer mandate, NOT a scheduled migration), Cedar/OpenFGA + AuthZEN 1.0 (PDP), OTel + a self-hosted transparency log (Tessera) + an internal RFC3161 TSA + a cross-org witness (audit infrastructure), AgentDojo (eval). See [../architecture/build-vs-consume.md](../architecture/build-vs-consume.md) and [../tech-stack.md](../tech-stack.md). The build effort is confined to the white space: the IFC engine, the compensation library, the thin AND-gate resolver + attenuation, and the Article 12/14 evidence pack.
 - **Design partners:** continued access to real finance-ops connectors and audit functions is required for W1 (connector validation) and W4 (mapping review). See [../business/design-partner-plan.md](../business/design-partner-plan.md).
 - **Cross-workstream:** W2 (hardening) gates the production credibility of W1, W5, and M6. W3 (OSS) provides the surface that W5 (neutrality) exercises. W1 (catalog) feeds the breadth that W4 (compliance) maps and M6 (expansion) sells.
 - **Outbound (to [phase-2-platform.md](phase-2-platform.md)):** the IFC engine matured in W2/W5 becomes the basis of the Phase 2 IFC premium tier; the anchored evidence store becomes the Phase 2 system-of-record; the proven neutral seam unblocks a second vertical.

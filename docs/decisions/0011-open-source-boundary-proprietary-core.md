@@ -30,7 +30,7 @@ flowchart TB
         IFC["S1 IFC engine -- P and Q isolation runtime-taint lattice"]
         COMP["S2 compensation library -- per-connector inverse catalog + harness"]
         EV["S4 evidence-store -- signed externally-anchored system-of-record"]
-        PACK["Md.12 and Md.14 + DORA + MiFID evidence packs"]
+        PACK["Article 12 and Article 14 + DORA + MiFID II evidence packs"]
     end
     OSS -->|"defines the contract the core implements"| PROP
 ```
@@ -46,7 +46,7 @@ flowchart TB
 
 - The **S1 IFC engine** - the P/Q-LLM isolation runtime, the dual-lattice label-propagation + fail-closed sink-gate. The DSL is open; the engine that enforces it is not.
 - The **S2 compensation library** - the per-connector inverse (A^-1) catalog, the round-trip test harness, the observe-probe, the API-version-pinned auto-runnable definitions. This is the real moat ([0005](0005-s2-dbos-substrate-compensation-library.md)); its value is the accumulated, validated content, and open-sourcing it would directly hand a horizontal absorber (Temporal moving up, Snyk moving down) the one thing they cannot quickly build.
-- The **S4 evidence-store** - the signed + externally-anchored ledger that becomes the customer's audit system-of-record, plus the Md.12/14 + DORA + MiFID evidence packs that are the deal-unblocker dossier.
+- The **S4 evidence-store** - the signed + externally-anchored ledger that becomes the customer's audit system-of-record, plus the Article 12/14 + DORA + MiFID II evidence packs that are the deal-unblocker dossier.
 
 **Considered:**
 

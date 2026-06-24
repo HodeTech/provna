@@ -29,7 +29,7 @@ S4 = **assemble** commodity infrastructure (we do not invent crypto) and **build
 4. **`kid`-embedded portable witness.** Every record embeds the key id (`kid`) plus the public key / certificate, so the witness is verifiable by an independent auditor with an offline verifier — not bound to a local secret. (This is the gap where competitors embed neither, leaving the witness tied to a local key.)
 5. **Persist the BAR-style governance-failure signal.** A behavioral/governance monitor firing is written as a *signed* `compliance_finding` audit event, bound into the ledger — not returned as a transient alert. This is the forensic proof that enforcement was active.
 6. **Optional ML-DSA (FIPS 204) for long retention.** For evidence whose retention horizon outlives classical-signature assumptions, signatures may additionally use the post-quantum ML-DSA scheme (FIPS 204), so the long-tail dossier remains verifiable against a future cryptanalytic threat.
-7. **Regulatory mapping (BUILD).** The evidence is mapped to EU AI Act Article 12 (forensic reproducibility) and Article 14 (human oversight), plus DORA and MiFID — the deal-unblocking dossier no competitor offers at EU-FS depth. See [../compliance/regulatory-mapping.md](../compliance/regulatory-mapping.md).
+7. **Regulatory mapping (BUILD).** The evidence is mapped to EU AI Act Article 12 (forensic reproducibility) and Article 14 (human oversight), plus DORA and MiFID II — the deal-unblocking dossier no competitor offers at EU-FS depth. See [../compliance/regulatory-mapping.md](../compliance/regulatory-mapping.md).
 
 Underneath, the assembled stack is OpenTelemetry → hash-chain → Merkle → Tessera (self-hosted) + cross-org tlog-witness → internal HSM-backed RFC3161 TSA → RFC8785 JCS, with optional ML-DSA for long retention (see [../tech-stack.md](../tech-stack.md)).
 
@@ -43,7 +43,7 @@ Underneath, the assembled stack is OpenTelemetry → hash-chain → Merkle → T
 - Self-hosted Tessera + internal HSM-backed RFC3161 TSA keep the entire anchoring path within the deployment boundary, so anchoring never depends on forbidden egress and cannot be silently disabled in regulated environments.
 - JCS + `kid`-embedded witness make the evidence independently verifiable offline, which is what an auditor actually needs; optional ML-DSA (FIPS 204) keeps the long-retention dossier verifiable against a future post-quantum threat.
 - The signed evidence store becomes the agent-action system-of-record: leaving Provna means losing audit history, the strongest switching cost.
-- The Article 12/14 + DORA + MiFID mapping is the dossier that turns the Verifier from a veto into a sign-off.
+- The Article 12/14 + DORA + MiFID II mapping is the dossier that turns the Verifier from a veto into a sign-off.
 
 ### Negative
 

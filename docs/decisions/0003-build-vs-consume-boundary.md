@@ -6,7 +6,7 @@
 
 ## Context
 
-The guarded saga step (see [0001-atomic-unit-guarded-saga-step.md](0001-atomic-unit-guarded-saga-step.md)) requires four gates, but it does not follow that we should build all four. Two of the four sit in saturated, commoditizing markets: runtime authorization (the PDP layer - Cedar, OpenFGA, AuthZEN; with identity giants consolidating, evidenced by a ~$740M acquisition in that space) and tamper-evident audit infrastructure (OpenTelemetry, Rekor/Trillian, RFC3161 - the format is open, the mechanism is a commodity). Durable execution is likewise commoditized substrate (DBOS, Temporal). The other two are genuine white space: there is no vendor-neutral production information-flow-control plane, and no security vendor ships verified per-connector compensation - everyone treats reversal as "a developer problem."
+The guarded saga step (see [0001-atomic-unit-guarded-saga-step.md](0001-atomic-unit-guarded-saga-step.md)) requires four gates, but it does not follow that we should build all four. Two of the four sit in saturated, commoditizing markets: runtime authorization (the PDP layer - Cedar, OpenFGA, AuthZEN; with identity giants consolidating, evidenced by a ~$740M acquisition in that space) and tamper-evident audit infrastructure (OpenTelemetry, transparency logs, RFC3161 - the format is open, the mechanism is a commodity). Durable execution is likewise commoditized substrate (DBOS, Temporal). The other two are genuine white space: there is no vendor-neutral production information-flow-control plane, and no security vendor ships verified per-connector compensation - everyone treats reversal as "a developer problem."
 
 If we build everything we become horizontally bloated, slow, and we re-implement primitives that giants give away. If we consume everything we have no moat and become an assembler. The boundary has to be drawn exactly where defensibility lives.
 
@@ -21,7 +21,7 @@ flowchart TB
     subgraph CONSUME["CONSUME / ASSEMBLE -- commoditized"]
         C1["Durability: DBOS / Temporal"]
         C2["PDP: Cedar / OpenFGA / AuthZEN 1.0"]
-        C3["Audit infra: OTel + Rekor/Trillian + RFC3161"]
+        C3["Audit infra: OTel + Tessera + RFC3161 + witness"]
         C4["Optional pre-filter classifier"]
     end
     BUILD ==>|"sits on top of"| CONSUME

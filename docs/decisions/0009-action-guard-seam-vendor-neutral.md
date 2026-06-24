@@ -20,8 +20,8 @@ Considered: **single-runtime embedding** (simplest to ship first; rejected: lock
 A single **ActionGuard seam** with a three-method protocol, exposed over vendor-neutral surfaces:
 
 - **Protocol: `decide() -> commit() -> compensate()`.**
-  - `decide(intent, taint)` runs Gate 1 (IFC) + Gate 3 (AND-gate authz) + risk tiering and returns a verdict: allow / block / require-approval / transform.
-  - `commit(plan, commitThunk)` runs Gate 2 (idempotent execution via a semantic effect key, with the compensation recorded) + Gate 4 (tamper-evident audit emit).
+  - `decide(intent, taint)` runs Gate 1 (IFC) + Gate 2 (AND-gate authz) + risk tiering and returns a verdict: allow / block / require-approval / transform.
+  - `commit(plan, commitThunk)` runs Gate 3 (idempotent execution via a semantic effect key, with the compensation recorded) + Gate 4 (tamper-evident audit emit).
   - `compensate(receipt)` runs the reverse-saga out-of-band on later-violation or saga failure.
 - **Host-injected, optional, default-OFF.** The host runtime invokes the seam at its side-effecting tool boundary only when configured; with no guard injected, behavior is unchanged. This enables the "govern in two lines" progression: Layer-0 audit-only but signed+anchored (NOT plain logging) → Layer-1 policy (deny + dry-run) → Layer-2 compensate.
 - **Vendor-neutral surfaces: SDK (Python/TS) + MCP hook + proxy.** The same ActionGuard logic is offered through all three so no integration is privileged. For Claude Code, the integration uses a real PreToolUse deny, not an observe-only post-hook (see [0010-fail-closed-everywhere.md](0010-fail-closed-everywhere.md)).

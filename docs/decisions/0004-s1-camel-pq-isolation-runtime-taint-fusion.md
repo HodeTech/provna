@@ -12,11 +12,11 @@ The field offers three reference points, each correct in one mechanism and wrong
 
 ```mermaid
 flowchart LR
-    U["Trusted user request"] --> P["P-LLM (planner)\ncan call tools"]
-    UC["Untrusted content\nemail / web / tool output"] --> Q["Q-LLM (quarantined)\ncannot call tools, returns typed values only"]
-    Q -->|"typed values: IBAN Amount Date"| INT["Interpreter\ncapability + label propagation"]
+    U["Trusted user request"] --> P["P-LLM (planner)<br/>can call tools"]
+    UC["Untrusted content<br/>email / web / tool output"] --> Q["Q-LLM (quarantined)<br/>cannot call tools, returns typed values only"]
+    Q -->|"typed values: IBAN Amount Date"| INT["Interpreter<br/>capability + label propagation"]
     P -->|"plan"| INT
-    INT --> SINK{"Sink-policy gate\nargument capability authorized?"}
+    INT --> SINK{"Sink-policy gate<br/>argument capability authorized?"}
     SINK -->|"yes"| ACT["side-effect action"]
     SINK -->|"no"| BLK["block / signed declassify"]
 ```

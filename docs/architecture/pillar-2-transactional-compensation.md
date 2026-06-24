@@ -16,10 +16,10 @@ This is the pillar Provna **builds** as its deepest IP. The other three pillars 
 flowchart LR
     subgraph S2["S2 ACTION CONTRACT -- the guarded saga step third gate"]
         direction LR
-        ID["idempotent\nsemantic effect key"] --> DRY["dry-run\npreview, zero side effect"]
-        DRY --> HITL["HITL\nrisk-tiered Md.14 approval"]
-        HITL --> EXEC["execute\nside effect fires"]
-        EXEC --> COMP["compensate\nA inverse or two-phase void"]
+        ID["idempotent<br/>semantic effect key"] --> DRY["dry-run<br/>preview, zero side effect"]
+        DRY --> HITL["HITL<br/>risk-tiered Article 14 approval"]
+        HITL --> EXEC["execute<br/>side effect fires"]
+        EXEC --> COMP["compensate<br/>A inverse or two-phase void"]
     end
     IN["authorized, IFC-cleared intent"] --> ID
     COMP --> AUD["S4 audit -- signed and anchored"]
@@ -69,10 +69,10 @@ The catalog grows by a self-reinforcing loop. A new connector enters; an LLM pro
 ```mermaid
 flowchart TD
     NEW(["new connector x action x param"]) --> PROP["LLM proposes A inverse from OpenAPI spec"]
-    PROP --> TEST{"gVisor round-trip test, offline cassettes\nA then A inverse, state equal?"}
-    TEST -->|"passed"| DRIFT{"oasdiff drift gate\nre-record station, OpenAPI stable?"}
-    TEST -->|"failed"| TWOPHASE["two-phase gate\nauth then capture then void\nor human-approved path"]
-    DRIFT -->|"no drift"| PROMO["promote to auto-runnable catalog\nAPI-version-pinned"]
+    PROP --> TEST{"gVisor round-trip test, offline cassettes<br/>A then A inverse, state equal?"}
+    TEST -->|"passed"| DRIFT{"oasdiff drift gate<br/>re-record station, OpenAPI stable?"}
+    TEST -->|"failed"| TWOPHASE["two-phase gate<br/>auth then capture then void<br/>or human-approved path"]
+    DRIFT -->|"no drift"| PROMO["promote to auto-runnable catalog<br/>API-version-pinned"]
     DRIFT -->|"drift"| TWOPHASE
     PROMO --> GROW["library grows, observe-probe attached"]
     GROW --> INHERIT["new customers inherit the catalog"]

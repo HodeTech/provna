@@ -1,6 +1,6 @@
 # Documentation Style
 
-**Status: Accepted**
+**Status:** Accepted
 **Last updated: 2026-06-24**
 **Related:** [adr-template.md](adr-template.md), [architectural-principles.md](architectural-principles.md), [README.md](README.md)
 
@@ -25,7 +25,7 @@ Every file starts with a single H1 (`#`), and **no YAML front-matter**. Immediat
 ```markdown
 # Page Title
 
-**Status: Accepted**
+**Status:** Accepted
 **Last updated: 2026-06-24**
 **Related:** [../vision.md](../vision.md), [../architecture/overview.md](../architecture/overview.md)
 ```
@@ -39,7 +39,7 @@ There is exactly one H1 per file (the title). All other headings are H2 (`##`) a
 ## Links
 
 - **Relative markdown only**, and only to files that exist in the public `docs/` tree: `[../tech-stack.md](../tech-stack.md)`, `[../architecture/pillar-2-transactional-compensation.md](../architecture/pillar-2-transactional-compensation.md)`.
-- **Never** link to a file outside the public tree, to an absolute path, or to any untracked working note.
+- **Never** link to a file outside the public tree, to a local absolute filesystem path, or to any untracked working note. External web sources may be cited inline with absolute `https://` URLs.
 - If you reference a fact that lives only in an untracked source, **restate the fact**; do not link to the source. See *Self-containment* below.
 
 ## Diagrams (Mermaid)

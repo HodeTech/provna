@@ -98,7 +98,7 @@ The excluded class is stated plainly: implicit flows (e.g. control-flow-dependen
 
 S1 is measured on **AgentDojo**, reporting ASR and utility-tax **together** - never ASR alone. ASR-alone is a trap ("block everything" drives ASR to 0 while destroying utility); the paired numbers prove the gate did not simply refuse all work. We additionally publish FS-domain ground-truth (e.g. reconciliation correctness) so the claim is not just "we blocked" but "the agent still completed the task correctly."
 
-- Known IFC utility-tax reference: roughly 7 points - **AgentDojo now empirically confirms this ~7-point tax** for typed-IFC defenses, so the figure has moved from founding-thesis opinion to a measured reference (still to be re-validated against a design partner's FS workflow).
+- Known IFC utility-tax reference: roughly 7 points [OPINION] - consistent with a single typed-IFC AgentDojo data point (~77% task completion vs ~84% undefended), not a general empirical confirmation; still to be validated against a design partner's FS workflow.
 - The reported ASR is to be presented as the lattice + sink-policy guarantee, explicitly *not* attributed to classifier coverage.
 
 The ASR/utility-tax numbers feed the broader eval discipline shared with the other pillars; see [build-vs-consume.md](build-vs-consume.md) and [../tech-stack.md](../tech-stack.md) for the AgentDojo dependency.
@@ -108,7 +108,7 @@ The ASR/utility-tax numbers feed the broader eval discipline shared with the oth
 Tracked items that must be resolved before the S1 guarantee is sold as production-grade:
 
 - **Annotation coverage.** Confirm that fail-closed (`unlabeled => untrusted`) holds across every ingress path in the target runtime, with no uninstrumented bypass (the failure mode that weakens horizontal substrates).
-- **Utility-tax in a real FS workflow.** Re-validate the ~7-point reference (now AgentDojo-confirmed for typed-IFC defenses generally) against a design partner's reconciliation / AP workflow on AgentDojo + FS ground-truth.
+- **Utility-tax in a real FS workflow.** Re-validate the ~7-point reference [OPINION] (consistent with one typed-IFC AgentDojo data point, not a general confirmation) against a design partner's reconciliation / AP workflow on AgentDojo + FS ground-truth.
 - **P/Q isolation under real connectors.** Prove the Q-LLM genuinely has no tool-call path and that typed handles are the only channel from untrusted content to a sink, end to end.
 - **Declassification ergonomics.** Confirm the signed `trust_boundary` node is usable enough that operators do not route around it (an unusable declassification path becomes a shadow fail-open).
 - **Patent caution.** Re-implement primitives independently from prior art (Jif / FlowCaml / Capsicum-style capabilities); do not copy any third party's taint-laundering-prevention or execution-witness-binding combination claims, and do not use competitor trademarks. The consumed references (FIDES, dromedary) are MIT-licensed, which simplifies the reference path, but Provna's own data-plane primitives are still implemented independently. [UNVERIFIED - legal review pending.]

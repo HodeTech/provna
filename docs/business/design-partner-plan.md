@@ -21,7 +21,7 @@ These are ordered to surface the blocked project, the liability owner, the curre
 1. **The blocked project.** Do you have an agent project currently blocked from production? What is it trying to do, who blocked it, and what was the objection?
 2. **The pre-condition and the liability.** What must be true before a payment or a ledger posting is allowed to go through? If it goes through wrong, who is personally liable?
 3. **Detect / reverse / prove today.** How do you detect a wrong money movement today? How do you reverse it? How do you prove what happened — and how long does each of those take?
-4. **The regulatory evidence.** For EU AI Act Article 12 / Article 14, DORA, and MiFID, what evidence are you actually required to produce, and how do you produce it now?
+4. **The regulatory evidence.** For EU AI Act Article 12 / Article 14, DORA, and MiFID II, what evidence are you actually required to produce, and how do you produce it now?
 5. **The unlock test.** If you had per-action authorization + dry-run/preview + guaranteed reversal + tamper-evident audit, would you let the agent write? If not, what else would have to be true?
 6. **Whose budget.** Whose budget pays for this — the security-tooling line, or the agent-project / compliance line?
 7. **The disqualifier.** Even if it worked perfectly, what would you say NO to?

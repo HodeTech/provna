@@ -10,7 +10,7 @@
 
 S3 answers one question at the moment a side-effecting call is about to execute: **is this specific agent, acting for this specific user, under this specific delegation chain, with this specific declared intent, allowed to perform this exact action on this exact resource right now?** It is the second gate of the guarded saga step — it runs after the IFC gate [S1] has confirmed the data flow is authorized, and before the action contract [S2] commits anything reversible.
 
-The authorization decision is a hard precondition for execution. A `deny` here is fail-closed: the action does not run, and the denial is itself a signed audit event [S4]. S3 also feeds the lifecycle's degraded paths — instead of a binary allow/deny it can return `require-approval` (route to a Md.14 four-eyes HITL gate) or `dry-run` (preview only, no commit).
+The authorization decision is a hard precondition for execution. A `deny` here is fail-closed: the action does not run, and the denial is itself a signed audit event [S4]. S3 also feeds the lifecycle's degraded paths — instead of a binary allow/deny it can return `require-approval` (route to a Article 14 four-eyes HITL gate) or `dry-run` (preview only, no commit).
 
 S3 is deliberately the **thinnest** of the four pillars to BUILD. It is a saturated, commoditized market, and Provna does not try to own it. Provna owns S1 (information-flow control) and S2 (transactional compensation); it **consumes** the policy decision point (PDP) for S3 and builds only the thin resolver and attenuation/admission logic that no off-the-shelf PDP provides.
 

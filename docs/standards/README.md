@@ -1,6 +1,6 @@
 # Standards
 
-**Status: Accepted**
+**Status:** Accepted
 **Last updated: 2026-06-24**
 **Related:** [adr-template.md](adr-template.md), [documentation-style.md](documentation-style.md), [architectural-principles.md](architectural-principles.md)
 

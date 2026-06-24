@@ -10,7 +10,7 @@ Read this first. This is the live status page: where Provna actually is today an
 
 Provna is **pre-build**. There is no shipped product, no inline PEP, no compensation library, no evidence store yet. What exists is a settled framing: the definition (a vendor-neutral runtime control plane turning every write into a reversible + authorized + information-flow-controlled + regulator-grade-provable contract), the atomic unit (the guarded saga step), the four-pillar build-vs-consume boundary, the vertical-FS beachhead, and the GTM thesis (permission to ship, not security tooling).
 
-The immediate job is not to build the whole platform. It is to (a) de-risk the brand, (b) produce four small proofs that the hard parts work, and (c) get in front of design partners. These map directly to the global milestones M0..M4 in [README.md](README.md).
+The immediate job is not to build the whole platform. It is to (a) de-risk the brand, (b) produce three small proofs that the hard parts work (compensation, IFC fusion, signed-anchored evidence), and (c) get in front of design partners. These map directly to the global milestones M0..M4 in [README.md](README.md).
 
 A note on dates: the EU AI Act Article 12/14 milestone is close on the calendar, but Provna is pre-build and will not be a product by then. That date is an urgency signal that starts the conversation today, not the forcing function. The real, durable forcing function is continuous: DORA operational-resilience obligations + the recurring evidence demand of every audit cycle + the standing risk appetite around irreversible money movement. We sell the permanent obligation, never "we make the deadline".
 
@@ -18,11 +18,11 @@ A note on dates: the EU AI Act Article 12/14 milestone is close on the calendar,
 
 ```mermaid
 flowchart TD
-    S1["Step 1 NAME / TRADEMARK CLEARANCE\nCRITICAL PATH - blocks brand/domain/code"]
-    S2["Step 2 S2 compensation-harness PoC\none connector A to A-inverse round-trip"]
-    S3["Step 3 S1 fusion PoC + AgentDojo\nASR and utility-tax together"]
-    S4["Step 4 S4 signed + anchored evidence prototype\nJCS + Ed25519 + Tessera transparency log + kid"]
-    S5["Step 5 design-partner outreach\n8-10 interviews to 2-3 payment-intent pilots"]
+    S1["Step 1 NAME / TRADEMARK CLEARANCE<br/>CRITICAL PATH - blocks brand/domain/code"]
+    S2["Step 2 S2 compensation-harness PoC<br/>one connector A to A-inverse round-trip"]
+    S3["Step 3 S1 fusion PoC + AgentDojo<br/>ASR and utility-tax together"]
+    S4["Step 4 S4 signed + anchored evidence prototype<br/>JCS + Ed25519 + Tessera transparency log + kid"]
+    S5["Step 5 design-partner outreach<br/>8-10 interviews to 2-3 payment-intent pilots"]
     S1 ==> S2
     S2 -. parallel .-> S3
     S2 -. parallel .-> S4

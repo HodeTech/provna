@@ -18,12 +18,12 @@ This pillar is emphatically **not** logging and **not** observability. An unsign
 
 ---
 
-## 2. Why ASSEMBLE + Md.12/14-BUILD
+## 2. Why ASSEMBLE + Article 12/14-BUILD
 
 The build-vs-consume boundary for S4 is deliberate and asymmetric: **assemble the cryptographic machinery, build the regulatory mapping.**
 
 - **ASSEMBLE the machinery.** Hash chains, Merkle trees, transparency logs (self-hosted Tessera, the Go successor to Trillian; Rekor v2 as reference design), RFC3161 timestamping, witness cosignatures (tlog-witness), and JSON canonicalization (RFC8785) are commodity, well-understood, independently audited primitives. Reinventing any of them would be cost without defensibility. Provna's contribution at the mechanism layer is **integration discipline and fail-closed assembly**, not cryptographic novelty. See [tech-stack-analysis.md](tech-stack-analysis.md) for the substrate evaluation.
-- **BUILD the Article 12 / Article 14 evidence pack.** The defensible value is the **EU-FS regulatory depth** none of the surveyed competitors have: a per-action dossier that maps directly to EU AI Act Article 12 (record-keeping / forensic reproducibility) and Article 14 (human oversight), plus DORA operational-resilience and MiFID record obligations. The horizontal governance substrates touch audit shallowly and leave it unsigned; vertical regulatory mapping is the moat-adjacent work here.
+- **BUILD the Article 12 / Article 14 evidence pack.** The defensible value is the **EU-FS regulatory depth** none of the surveyed competitors have: a per-action dossier that maps directly to EU AI Act Article 12 (record-keeping / forensic reproducibility) and Article 14 (human oversight), plus DORA operational-resilience and MiFID II record obligations. The horizontal governance substrates touch audit shallowly and leave it unsigned; vertical regulatory mapping is the moat-adjacent work here.
 
 The market lesson is concrete. Across the surveyed landscape, the audit layer is the **common gap**: ledgers rely on a local self-clock (`datetime.now`-style), do not embed a portable key identifier, and never bind governance-failure signals into the ledger itself. Provna closes each of these gaps not by building better crypto but by **assembling the right primitives in a fail-closed order and binding them to the regulatory artifact a Verifier must produce.**
 
@@ -49,7 +49,7 @@ flowchart TD
     G1 --> I
     G2 --> I
     G3 --> I
-    I --> J["Md.12/14 + DORA + MiFID evidence pack (one-click export)"]
+    I --> J["Article 12/14 + DORA + MiFID II evidence pack (one-click export)"]
 ```
 
 ### 3.1 Components
@@ -156,7 +156,7 @@ The BUILD deliverable is the regulatory evidence pack. Canonical regulatory deta
 | **EU AI Act Article 12** (record-keeping / forensic reproducibility) | Automatic, traceable records sufficient to reconstruct events | Per-action canonical (JCS) decision event + `policy_snapshot_ref` (reproduce the *why*) + hash-chain + Merkle + air-gap-native anchor with cross-org witness cosignature (reproduce the *what* and prove it is unaltered) |
 | **EU AI Act Article 14** (human oversight) | Demonstrable human-in-the-loop on high-risk actions | Signed record of dry-run preview, risk-tier escalation, and four-eyes HITL approval/rejection, anchored like any other event |
 | **DORA** (operational resilience, long retention) | Durable, integrity-protected operational records | Anchored + cross-org-witnessed chain + optional ML-DSA (FIPS 204) PQC-hybrid signature for long-retention integrity (Section 9) |
-| **MiFID** (record obligations) | Reconstructable transaction-related records | Same per-action evidence record, exportable as a dossier |
+| **MiFID II** (record obligations) | Reconstructable transaction-related records | Same per-action evidence record, exportable as a dossier |
 
 ### Honesty Anchor (sell verbatim)
 

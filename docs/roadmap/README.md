@@ -19,10 +19,10 @@ When this file says "phase" it means sense (2). When a phase file references the
 
 ```mermaid
 flowchart TD
-    P0["Phase-0 MVP (0-3 mo, indicative)\none connector - one action type\nshadow-mode with 2-3 design partners"]
-    P01["Phase-0 to 1 Enforcement (3-6 mo)\nabove-threshold blocking + reversal\ncompensation flywheel starts - first paying contract"]
-    P1["Phase-1 Scale (6-12 mo)\nexpand finance-ops - open-source policy/SDK\nprove vendor neutrality"]
-    P2["Phase-2 Platform (12-18 mo)\nIFC premium tier - system-of-record\nsecond vertical"]
+    P0["Phase-0 MVP (0-3 mo, indicative)<br/>one connector - one action type<br/>shadow-mode with 2-3 design partners"]
+    P01["Phase-0 to 1 Enforcement (3-6 mo)<br/>above-threshold blocking + reversal<br/>compensation flywheel starts - first paying contract"]
+    P1["Phase-1 Scale (6-12 mo)<br/>expand finance-ops - open-source policy/SDK<br/>prove vendor neutrality"]
+    P2["Phase-2 Platform (12-18 mo)<br/>IFC premium tier - system-of-record<br/>second vertical"]
     V0(["Gate G0: shadow-mode evidence pack accepted by a risk committee"])
     V1(["Gate G1: blocked project ships to limited prod BECAUSE of Provna + first paying contract"])
     V2(["Gate G2: vendor neutrality proven beyond Relavium + compensation flywheel earning its moat"])
@@ -94,7 +94,7 @@ These hold in every phase, in every gate, on every surface. They are not roadmap
 3. **Honest-guarantee / evidence boundary.** Evidence is regulator-grade forensic-reproducible. "Court-admissible" is case-by-case and jurisdiction-dependent (UNVERIFIED); the two are never conflated. Market statistics are sourced or softened to "the large majority"; no fake precision.
 4. **Signed + anchored evidence = system-of-record.** Even Layer-0 audit-only output is signed + Merkle + externally anchored (a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature, with Rekor v2 as the reference design) + JCS-canonical + kid-embedded - not plain logging. An insider or key-holder cannot rewrite history.
 5. **Vendor neutrality (goal/principle).** The same ActionGuard decide/commit/compensate logic is offered via SDK, MCP hook, and proxy. Relavium is the FIRST reference integration, not the only one. Becoming "enterprise Relavium" is a red line.
-6. **Never sell "undo everything".** Compensation is semantic and sometimes impossible; for irreversible actions prefer two-phase (auth -> capture -> void) and HITL. We say "risky actions are prevented; connector-backed actions are reversible", never "everything is reversible".
+6. **Never sell "undo everything".** Compensation is semantic and sometimes impossible; for irreversible actions prefer two-phase (auth -> capture -> void) and HITL. We say "risky actions are prevented; connector-backed actions are reversed", never "everything is reversible".
 
 ## KPIs / metrics
 

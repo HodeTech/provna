@@ -2,7 +2,7 @@
 
 > **Status:** Living · **Last updated: 2026-06-24**
 
-**Provna is a vendor-neutral runtime control plane that turns every WRITE action an agent takes in regulated enterprise systems into a contract that is reversible, authorized, information-flow-controlled, and regulator-grade provable.** Its atomic unit is the *guarded saga step*: every side-effecting call passes four gates — information-flow control (S1), runtime authorization (S2 is the action contract; authorization is S3), and tamper-evident audit (S4). It does not sell a security tool; it sells the gate that lets a blocked agent project ship.
+**Provna is a vendor-neutral runtime control plane that turns every WRITE action an agent takes in regulated enterprise systems into a contract that is reversible, authorized, information-flow-controlled, and regulator-grade provable.** Its atomic unit is the *guarded saga step*: every side-effecting call passes four gates — information-flow control (S1), runtime authorization (S3), the transactional action contract / compensation (S2), and tamper-evident audit (S4). It does not sell a security tool; it sells the gate that lets a blocked agent project ship.
 
 This tree is the **planning and roadmap documentation** for Provna (currently pre-build). It is organized by *the kind of question each section answers*, not by which subsystem the answer touches — when you have a question, you should know which folder to open before you know which part of the system is involved.
 
@@ -21,7 +21,7 @@ This tree is the **planning and roadmap documentation** for Provna (currently pr
 | [decisions/](decisions/README.md) | **Why is it built this way?** Architecture Decision Records (ADRs) in condensed MADR format — one per non-trivial choice. |
 | [standards/](standards/README.md) | **How should things be written?** Documentation style, the ADR template, and the architectural principles. |
 | [business/](business/README.md) | **Who is it for, and how is it sold?** The ICP and GTM motion, the design-partner plan, and pricing/packaging. |
-| [compliance/](compliance/regulatory-mapping.md) | **What must we satisfy?** How the evidence pack maps to EU AI Act Article 12/14, DORA, MiFID, and ISO 42001. |
+| [compliance/](compliance/regulatory-mapping.md) | **What must we satisfy?** How the evidence pack maps to EU AI Act Article 12/14, DORA, MiFID II, and ISO 42001. |
 | [risks/](risks/risk-register.md) | **What could dilute or kill it?** The risk register and the red lines. |
 
 ## Reading order for newcomers

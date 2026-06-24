@@ -88,7 +88,7 @@ The reverse saga runs the recorded inverses in LIFO order to unwind the committe
 
 ## Gate 4 -- tamper-evident audit (S4, Article 12)
 
-Every branch terminates here. Whatever the outcome — allow, block, dry-run, reverse — Provna emits a signed, externally-anchored record: OpenTelemetry span, hash-chain link, Merkle root, RFC3161 external anchor, RFC8785 JCS canonicalization, `kid`-embedded portable witness, and a `policy_snapshot_ref` binding the decision to the exact policy version. Governance-failure signals are persisted as signed audit events, not silently dropped. The evidence is regulator-grade and forensic-reproducible, mapped to EU AI Act Article 12 (forensic reproducibility) and Article 14 (human oversight), plus DORA and MiFID. "Court-admissible" is case-by-case UNVERIFIED and is never overclaimed. Canonical: [pillar-4-tamper-evident-audit.md](pillar-4-tamper-evident-audit.md).
+Every branch terminates here. Whatever the outcome — allow, block, dry-run, reverse — Provna emits a signed, externally-anchored record: OpenTelemetry span, hash-chain link, Merkle root, RFC3161 external anchor, RFC8785 JCS canonicalization, `kid`-embedded portable witness, and a `policy_snapshot_ref` binding the decision to the exact policy version. Governance-failure signals are persisted as signed audit events, not silently dropped. The evidence is regulator-grade and forensic-reproducible, mapped to EU AI Act Article 12 (forensic reproducibility) and Article 14 (human oversight), plus DORA and MiFID II. "Court-admissible" is case-by-case UNVERIFIED and is never overclaimed. Canonical: [pillar-4-tamper-evident-audit.md](pillar-4-tamper-evident-audit.md).
 
 ## The four terminal outcomes
 

@@ -23,7 +23,7 @@ The white space has three fusion components: (a) **IFC-aware compensation** - th
 | **Verity** | S2 | Exactly-once-forward only; no compensation, no dry-run, unsigned -> solves "do not double-execute," explicitly does not solve undo. |
 | **Rubrik** (Agent Rewind) | S2 | Snapshot-restore, not per-action inverse - cannot rewind a sent email or a triggered payment; a perception threat with no mechanism. |
 | **Temporal** ($5B) | S2 | Strong durable execution, but compensation is a manual pattern (not a library); no inverse, no dry-run, unsigned -> a substrate to consume. |
-| **SGNL via CrowdStrike** (~$740M) | S3 | Very strong per-action authz + CAEP + transaction tokens, but no S1/S2 and weak S4 -> it owns S3; Provna aligns and consumes here. |
+| **SGNL (acquired by CrowdStrike)** (~$740M) | S3 | Very strong per-action authz + CAEP + transaction tokens, but no S1/S2 and weak S4 -> it owns S3; Provna aligns and consumes here. |
 
 ## Competition quadrant
 
@@ -57,7 +57,7 @@ quadrantChart
 **Thesis: defensible in substance (S1+S2), not in position (S3+S4) - a ~12-24 month clock [OPINION].**
 
 - **Defensible (conditional).** The S2 compensation library is the hardest moat *candidate* because compensation is semantic (per-connector, API-version-bound, needs observe-probe + a round-trip harness). No horizontal / durable-execution / security vendor builds it (they treat it as a "developer problem"). But moat-hood is explicitly conditional: *if* compensation content genuinely requires multi-year accumulation, then "buy < build" holds and the flywheel turns; *if not*, the flywheel weakens. This is the single most critical assumption and is sold here as an assumption, not a certainty - it is the first item to validate with design partners (see [risks/risk-register.md](risks/risk-register.md)). The S1 fusion (P/Q isolation) is an architectural differentiator absent in all three torn-down competitors.
-- **Not defensible:** S3 is saturated (CrowdStrike / Cisco / Microsoft); S4 mechanism is commodity (OTel / Rekor / RFC3161). Provna's difference there is assembly + FS mapping, not a breakthrough -> consume it.
+- **Not defensible:** S3 is saturated (CrowdStrike / Cisco / Microsoft); S4 mechanism is commodity (OTel / transparency log / RFC3161). Provna's difference there is assembly + FS mapping, not a breakthrough -> consume it.
 - **First-mover advantage is in content accumulation, not architecture** (the saga mechanism is commodity).
 
 | Absorber | How | Counter-move |
@@ -65,7 +65,7 @@ quadrantChart
 | **Snyk (moves down)** | S1 via Invariant; if it expands into S2/S4 | Nail the S2 catalog to vertical-FS connectors (NetSuite/Stripe/SWIFT/ledger); integrate Article 12/14 regulator evidence - domain depth a horizontal S1 firm cannot reach. |
 | **Temporal (moves up)** | Adds a compensation library with a $5B war chest | Pool value where Temporal does not / cannot: IFC-aware compensation + signed/anchored regulator-grade compensation evidence + vertical-FS connector content. EU-FS forensic evidence + IFC fusion is not its category. |
 | **Rubrik (perception)** | "Snapshot is enough" narrative | Counter-position: "a snapshot cannot rewind SaaS side effects"; demo the sent-email / triggered-payment case. |
-| **Microsoft (organic)** | MGAT horizontal governance for free | Do not race horizontally; narrow the build to S2 + S1-runtime-IFC + Article 12/14; consume the ACS PDP as a substrate; lead with DORA/MiFID depth. |
+| **Microsoft (organic)** | MGAT horizontal governance for free | Do not race horizontally; narrow the build to S2 + S1-runtime-IFC + Article 12/14; consume the ACS PDP as a substrate; lead with DORA/MiFID II depth. |
 
 ## Why not horizontal - the MGAT lesson
 
@@ -85,6 +85,6 @@ Three different "ACS/ACP" must be kept distinct in all Provna materials, or Prov
 
 ## The vertical-FS beachhead
 
-The first market is the **EU-exposed financial-services back/middle office**. The wedge: payment / supplier-payment approval, OR reconciliation-break correction email. The reasons: (R1) errors are irreversible and pre-budgeted - a SOX / four-eyes budget already exists; (R2) the most date-stamped regulation - EU AI Act Article 12/14 + DORA + MiFID; (R3) live business pull - banks are deploying recon/AP/close agents but have no write layer; (R4) integrations are idempotency-native - payment rails / ERP already offer void/reversal; (R5) highest founder-fit (saga + compliance + eval). The others are strong #2s, not the beachhead: IT/cloud-ops (weak forcing function), healthcare RCM (hostile integration), insurance (slow).
+The first market is the **EU-exposed financial-services back/middle office**. The wedge: payment / supplier-payment approval, OR reconciliation-break correction email. The reasons: (R1) errors are irreversible and pre-budgeted - a SOX / four-eyes budget already exists; (R2) the most date-stamped regulation - EU AI Act Article 12/14 + DORA + MiFID II; (R3) live business pull - banks are deploying recon/AP/close agents but have no write layer; (R4) integrations are idempotency-native - payment rails / ERP already offer void/reversal; (R5) highest founder-fit (saga + compliance + eval). The others are strong #2s, not the beachhead: IT/cloud-ops (weak forcing function), healthcare RCM (hostile integration), insurance (slow).
 
 **Deadline realism [OPINION].** A specific regulatory date is not the *only* forcing function and Provna is pre-build, so it will not be a product that meets that single date. The real, *continuous* sales engine is DORA's ongoing operational-resilience obligations + the evidence demand that recurs every audit cycle + the permanent risk appetite around irreversible money movement. To a sophisticated buyer Provna does not say "we make the deadline"; it says "after the deadline passes you must still produce the same evidence at every audit, and we solve that permanent obligation."

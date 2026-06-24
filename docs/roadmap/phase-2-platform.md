@@ -101,7 +101,7 @@ Package S1 (CaMeL P/Q-LLM isolation core + FIDES/MVAR runtime-taint dual-lattice
 Move the S4 evidence store from "better audit" to "the authoritative record of agent actions." This is the strongest, most durable lock we have: when the auditor's history lives in Provna, leaving means losing audit history.
 
 - Harden the evidence store as a record-of-truth: Merkle root + external anchor (a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature, with Rekor v2 as the reference design) + RFC8785 JCS canonicalization + `kid`-embedded portable witness + complete `policy_snapshot_ref` on every decision (the S4<->S3 bridge), so an independent auditor - not just Provna - can verify history and even an insider / key-holder cannot rewrite it.
-- Persist the BAR-style governance-failure signal as a signed audit event (forensic proof that enforcement was actually active), and map every record to EU AI Act Article 12 (forensic reproducibility) / Article 14 (human oversight) + DORA + MiFID.
+- Persist the BAR-style governance-failure signal as a signed audit event (forensic proof that enforcement was actually active), and map every record to EU AI Act Article 12 (forensic reproducibility) / Article 14 (human oversight) + DORA + MiFID II.
 - Ship the independent-verifier + one-click export path. The lock must be a *value* lock (history that is too valuable to abandon), never a hostage lock; portability is what makes auditors trust it as their record. Honesty anchor: the evidence is regulator-grade forensic-reproducible; court-admissibility is case-by-case and jurisdiction-dependent UNVERIFIED - never conflate the two.
 
 **Acceptance:** at least two reference customers have formally designated the Provna store as their system-of-record for agent-action audit; an independent third party can verify a customer's history end-to-end from an export; the BAR governance-failure signal is queryable as signed evidence.
@@ -166,7 +166,7 @@ flowchart LR
 - **S1 IFC engine production-ready** (the engine itself is Phase 0-1 build; Phase 2 productizes it). See [../architecture/pillar-1-information-flow-control.md](../architecture/pillar-1-information-flow-control.md).
 - **S4 anchoring stack production-grade** (a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature, with Rekor v2 as the reference design + JCS + witness). See [../architecture/pillar-4-tamper-evident-audit.md](../architecture/pillar-4-tamper-evident-audit.md).
 - **S2 compensation harness + connector catalog** mature enough that inheritance is real. See [../architecture/pillar-2-transactional-compensation.md](../architecture/pillar-2-transactional-compensation.md).
-- **Compliance mapping depth** (Article 12/14 + DORA + MiFID for FS; HIPAA/payer rules for a healthcare second vertical). See [../compliance/regulatory-mapping.md](../compliance/regulatory-mapping.md).
+- **Compliance mapping depth** (Article 12/14 + DORA + MiFID II for FS; HIPAA/payer rules for a healthcare second vertical). See [../compliance/regulatory-mapping.md](../compliance/regulatory-mapping.md).
 - **Pricing model** that supports a compliance-tier paywall + metered governed-action (avoid per-seat). See [../business/pricing-and-packaging.md](../business/pricing-and-packaging.md).
 - **Name/brand clearance resolved** (Slavic connotation + domains + USPTO/EUIPO) - a hard prerequisite long before the brand carries a second vertical. UNVERIFIED; must be closed earlier in the program.
 
