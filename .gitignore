@@ -1,0 +1,20 @@
+# Provna — version control ignores
+
+# Internal/private analysis (competitive teardowns, framing, raw research)
+docs/private/
+
+# OS / editor noise
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Dependency / build artefacts (placeholder for future code)
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+.venv/
+venv/
+target/
