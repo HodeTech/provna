@@ -29,7 +29,7 @@ flowchart TB
         PEP --> CP --> UP["Upstream -- ERP payment rails Salesforce Workday"]
         CP --> LED
     end
-    ANCHOR["External anchor -- Rekor TSA only a Merkle root leaves"]
+    ANCHOR["External anchor -- self-hosted transparency log plus internal TSA plus witness cosignature only a Merkle root leaves"]
     LED -.->|"publishes root hash only -- mirror-able for air-gap"| ANCHOR
 ```
 
@@ -37,7 +37,7 @@ Concretely:
 
 - **Packaging:** Docker/OCI images; **Helm** charts for K8s install and upgrade; **Terraform** modules for the surrounding infrastructure. Pinned versions live in [../tech-stack.md](../tech-stack.md) and are not repeated here.
 - **Data residency:** all governed data, the policy decision, and the tamper-evident evidence ledger stay inside the customer VPC. The ledger is the customer's audit system-of-record and never leaves.
-- **Air-gapped support:** the system must install and run with no outbound connectivity. The one outbound primitive - the S4 external anchor (Rekor/Trillian + RFC3161 TSA, see [0007](0007-s4-merkle-external-anchor-jcs.md)) - publishes only a Merkle *root hash*, never content, and for air-gapped sites can be mirrored to a customer-operated witness so no raw data ever crosses the boundary. Fail-closed ([0010](0010-fail-closed-everywhere.md)) holds in-boundary regardless of anchor reachability.
+- **Air-gapped support:** the system must install and run with no outbound connectivity. The one outbound primitive - the S4 external anchor (a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature, with Rekor v2 as the reference design, see [0007](0007-s4-merkle-external-anchor-jcs.md)) - publishes only a Merkle *root hash*, never content, and for air-gapped sites can be mirrored to a customer-operated witness so no raw data ever crosses the boundary. Fail-closed ([0010](0010-fail-closed-everywhere.md)) holds in-boundary regardless of anchor reachability.
 
 **Considered:**
 

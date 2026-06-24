@@ -22,7 +22,7 @@ flowchart LR
         G1["S1 IFC skeleton<br/>P/Q + sink-gate"]
         G2["S3 AND-gate<br/>AuthZEN + Cedar + dry-run + HITL"]
         G3["S2 action contract<br/>idempotent + compensate A inverse"]
-        G4["S4 evidence pack<br/>hash-chain + Rekor + JCS"]
+        G4["S4 evidence pack<br/>hash-chain + Tessera + JCS"]
         G1 --> G2 --> G3 --> G4
     end
     PV -->|"governed-action evidence"| RC["risk committee<br/>go path to limited prod"]
@@ -36,7 +36,7 @@ Phase 0 is done when ALL of the following are true and demonstrable:
 2. **Compensation round-trip passes in CI.** For the chosen action, the harness runs `A` then `A^-1` against a sandbox and asserts observable state-equivalence; the round-trip test is green in CI and re-runs on every commit.
 3. **At least one injection is architecturally blocked.** The canonical AP-invoice injection demo (attacker IBAN hidden in untrusted invoice text) is blocked by the IFC sink-gate, not by a classifier guess, and the block is recorded as a signed audit event.
 4. **AgentDojo numbers exist and are honest.** ASR and utility-tax are measured together on the IFC skeleton and written down; the guarantee boundary (implicit-flow / side-channel NOT guaranteed) is stated alongside the numbers.
-5. **First evidence pack produced and externally verifiable.** A governed action yields a v1 evidence pack: JCS-canonicalized (RFC8785) events, Ed25519-signed with an embedded `kid`, hash-chained, Merkle-rooted, and anchored to Rekor; an independent verifier reproduces the chain offline and confirms the anchor.
+5. **First evidence pack produced and externally verifiable.** A governed action yields a v1 evidence pack: JCS-canonicalized (RFC8785) events, Ed25519-signed with an embedded `kid`, hash-chained, Merkle-rooted, and anchored to a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature, with Rekor v2 as the reference design; an independent verifier reproduces the chain offline and confirms the anchor.
 6. **"Govern in two lines" works.** A host integrates the ActionGuard seam (`decide -> commit -> compensate`) via the SDK in roughly two lines and gets Layer-0 signed+anchored audit with default-OFF enforcement.
 7. **Shadow mode live at 2-3 design partners.** The slice runs in shadow (observe, audit-only-but-signed) on real or replayed partner traffic; a cumulative count of governed actions is being accumulated (target gate below).
 8. **Fail-closed verified.** Forcing any gate to error (IFC engine down, PDP unreachable, signer unavailable) results in BLOCK with no downgrade path, demonstrated by test.
@@ -46,10 +46,10 @@ Phase 0 is done when ALL of the following are true and demonstrable:
 ### In scope
 
 - ONE connector (Stripe or NetSuite) and ONE action type. The connector choice is workstream 0.A; everything downstream depends on it.
-- The MVP stack only: TypeScript/Python + DBOS + Postgres + Cedar + Claude (default provider) + simple hash-chain + Rekor + single container. See [../tech-stack.md](../tech-stack.md).
+- The MVP stack only: TypeScript/Python + DBOS + Postgres + Cedar + Claude (default provider) + simple hash-chain + a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature (Rekor v2 as the reference design) + single container. See [../tech-stack.md](../tech-stack.md).
 - IFC as a working skeleton (P/Q isolation + dual-lattice sink-gate) sufficient to block the canonical injection - not the hardened production lattice.
 - AND-gate authorization via AuthZEN 1.0 + Cedar, with dry-run and HITL (four-eyes) for high-value / irreversible actions.
-- Evidence pack v1 (JCS + Ed25519 + `kid` + hash-chain + Merkle root + Rekor anchor) mapped to EU AI Act Article 12 and Article 14.
+- Evidence pack v1 (JCS + Ed25519 + `kid` + hash-chain + Merkle root + a self-hosted transparency log (Tessera) anchor + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature, with Rekor v2 as the reference design) mapped to EU AI Act Article 12 and Article 14.
 - The ActionGuard seam (`decide() -> commit() -> compensate()`) plus a minimal SDK exposing the "govern in two lines" Layer-0 onboarding.
 - Shadow-mode deployment in each partner's environment (their VPC where required), enforcement default-OFF.
 - Relavium as the first reference integration of the seam (one host); the seam itself stays host-injected and optional.
@@ -58,7 +58,7 @@ Phase 0 is done when ALL of the following are true and demonstrable:
 
 - Above-threshold **blocking/enforcement** of partner traffic. Phase 0 is shadow-only; enforcement is the [phase-0-1-enforcement.md](phase-0-1-enforcement.md) milestone.
 - More than one connector or more than one action type. No connector breadth, no auto-runnable catalog yet - just the first hand-built inverse and the harness that will later become the flywheel.
-- The inline Go/Rust hot-path PEP, Temporal, OpenFGA/biscuit, Trillian/witness federation, K8s/Helm hardening, SOC2 - all deferred to [phase-1-scale.md](phase-1-scale.md) / production-target stack.
+- The inline Go hot-path PEP (Rust reserved for a future hot leaf with a proven trigger), DBOS-at-scale (Temporal kept as a seam-isolated contingency triggered only by multi-tenant fan-out / a Postgres ceiling / a buyer mandate, NOT a scheduled migration), OpenFGA/biscuit (OpenFGA deferred behind a relationship-resolver interface until a partner is provably ReBAC), expanded witness federation, K8s/Helm hardening, SOC2 - all deferred to [phase-1-scale.md](phase-1-scale.md) / production-target stack.
 - Behavioral/temporal admission (the S3 "5th dimension"). The AND-gate ships in Phase 0; the post-AND-gate behavioral layer is a later increment.
 - biscuit/macaroon caveat-attenuation and transitive revocation as production features (the thin resolver ships; real attenuation is hardened later).
 - Transitive revocation, PQC-hybrid signatures, BAR governance-failure signal persistence beyond the basic signed-finding event.
@@ -109,11 +109,11 @@ Build the thin AND-gate resolver over a consumed PDP (Cedar via AuthZEN 1.0): a 
 
 **Acceptance:** an action missing any AND-gate leg is denied and logged; a high-value action produces a dry-run preview and suspends on a durable human-approval gate; an approved gate resumes to execute, a rejected gate stops and logs.
 
-### 0.F - S4 OTel -> hash-chain -> Rekor + Md.12/14 evidence pack v1
+### 0.F - S4 OTel -> hash-chain -> transparency log + Md.12/14 evidence pack v1
 
-Emit OTel events for every gate decision, hash-chain them, compute a Merkle root, and anchor to Rekor (+ external timestamp). Canonicalize with RFC8785 JCS, sign with Ed25519, embed `kid` and the public key/cert so the witness is portable, and attach `policy_snapshot_ref` (the policy hash in force at decision time). Assemble the v1 evidence pack and map its fields to Article 12 (forensic reproducibility) and Article 14 (human oversight).
+Emit OTel events for every gate decision, hash-chain them, compute a Merkle root, and anchor to a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature, with Rekor v2 as the reference design. Canonicalize with RFC8785 JCS, sign with Ed25519, embed `kid` and the public key/cert so the witness is portable, and attach `policy_snapshot_ref` (the policy hash in force at decision time). Assemble the v1 evidence pack and map its fields to Article 12 (forensic reproducibility) and Article 14 (human oversight).
 
-**Acceptance:** a governed action produces an evidence pack that an **independent offline verifier** can validate - reproduce the hash-chain, confirm the signature against the embedded `kid`, and confirm the Rekor anchor; an attempt to rewrite a past event breaks verification.
+**Acceptance:** a governed action produces an evidence pack that an **independent offline verifier** can validate - reproduce the hash-chain, confirm the signature against the embedded `kid`, and confirm the transparency-log anchor; an attempt to rewrite a past event breaks verification.
 
 ### 0.G - ActionGuard seam + "govern in two lines" SDK
 
@@ -174,7 +174,7 @@ Milestones are phase-relative; durations are indicative (pre-build) and span the
 
 **Consumed / assembled (not built):**
 
-- DBOS Transact (saga mechanism), Cedar + AuthZEN 1.0 (PDP), OTel + Rekor + RFC3161 (audit substrate), Claude (default LLM provider), AgentDojo (eval). See [../architecture/build-vs-consume.md](../architecture/build-vs-consume.md) and [../tech-stack.md](../tech-stack.md).
+- DBOS Transact (saga mechanism), Cedar + AuthZEN 1.0 (PDP), OTel + a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature, with Rekor v2 as the reference design (audit substrate), Claude (default LLM provider), AgentDojo (eval). See [../architecture/build-vs-consume.md](../architecture/build-vs-consume.md) and [../tech-stack.md](../tech-stack.md).
 - Relavium as the first reference host for the ActionGuard seam (one integration; the seam stays vendor-neutral by design). See [../architecture/integration-surfaces.md](../architecture/integration-surfaces.md).
 
 **Outbound (what Phase 0 unblocks):**

@@ -15,20 +15,23 @@ That threat model is exactly where the field is weak. Competitor implementations
 
 A further gap: governance-failure signals (e.g. a behavioral monitor firing) are often returned as transient alerts and never bound into the ledger, so there is no forensic proof that enforcement was actually active.
 
-Considered: **unsigned hash-chain** (the substrate/concept-twin weakness; rejected: an insider rewrite is undetectable — fails the core threat model). **Signed but unanchored, self-clocked** (rejected: backdating attack — the operator's own clock is not trustworthy, and a re-signed alternate history verifies cleanly). We reject both in favor of an externally-anchored, independently-verifiable design.
+**The air-gap-vs-public-anchor tension.** The obvious way to inject an independent clock and an independent verifier is a *public* transparency log and a *public* TSA — the operator cannot forge what a third party already witnessed. But Provna ships into the customer's VPC and into **air-gapped, fail-closed** deployments where outbound egress is forbidden by policy. A public anchor requires that forbidden egress at the exact moment of anchoring, so it is unavailable precisely where the regulated buyers live. We therefore reject "public transparency log / public TSA" as the anchoring substrate: it cannot satisfy the air-gap constraint, and an anchor that only works with internet egress is an anchor the regulated deployment will turn off. The independence the threat model demands must instead come from a witness in a *different trust domain* that is reachable without leaving the air gap.
+
+Considered: **unsigned hash-chain** (the substrate/concept-twin weakness; rejected: an insider rewrite is undetectable — fails the core threat model). **Signed but unanchored, self-clocked** (rejected: backdating attack — the operator's own clock is not trustworthy, and a re-signed alternate history verifies cleanly). **Public transparency log / public TSA** (rejected: requires forbidden egress, so it is unavailable in the air-gapped, fail-closed deployments that are the EU-FS target). We reject all three in favor of an internally-anchored, cross-org-witnessed, independently-verifiable design.
 
 ## Decision
 
-S4 = **assemble** commodity infrastructure (we do not invent crypto) and **build** the EU-FS evidence pack:
+S4 = **assemble** commodity infrastructure (we do not invent crypto) and **build** the EU-FS evidence pack, with anchoring that is **air-gap-native**:
 
 1. **Per-action structured record → Merkle root.** Records are batched into a Merkle tree; the root is the commitment over the batch. Each record carries `policy_snapshot_ref` (the S3 policy hash) so the decision is forensically reproducible.
-2. **External anchor.** The Merkle root is anchored to an independent transparency log (Rekor / Trillian) and an RFC3161 timestamp authority (TSA). This injects an independent clock and third-party verification — an insider rewrite is detectable because the rewritten root no longer matches the externally-anchored one. This is the single line that closes the insider/key-holder threat.
+2. **Internal anchor + cross-org witness (air-gapped non-repudiation).** The Merkle root is anchored to a **self-hosted transparency log — Tessera (the Go successor to Trillian)** — co-located in the deployment, and timestamped by an **internal HSM-backed RFC3161 TSA**. Independence is supplied not by the internet but by a **cross-organization witness cosignature (tlog-witness)** from an *independent trust domain* (e.g. the customer's separate audit org, or a counterparty/regulator domain), **pre-provisioned on both sides of the air gap** so the witness keys are already present and no egress is needed at anchoring time. The witness cosigns the log's checkpoint/root; an insider rewrite is detectable because the rewritten root no longer matches the root the independent witness already cosigned. This cross-domain cosignature — not a public clock — is the single line that closes the insider/key-holder threat under the air-gap constraint. **Rekor v2** is cited as the reference design for the log+witness pattern.
 3. **RFC8785 JCS canonicalization.** All signed payloads are canonicalized (JSON Canonicalization Scheme) so signatures are reproducible byte-for-byte across implementations and an independent auditor can re-verify.
 4. **`kid`-embedded portable witness.** Every record embeds the key id (`kid`) plus the public key / certificate, so the witness is verifiable by an independent auditor with an offline verifier — not bound to a local secret. (This is the gap where competitors embed neither, leaving the witness tied to a local key.)
 5. **Persist the BAR-style governance-failure signal.** A behavioral/governance monitor firing is written as a *signed* `compliance_finding` audit event, bound into the ledger — not returned as a transient alert. This is the forensic proof that enforcement was active.
-6. **Regulatory mapping (BUILD).** The evidence is mapped to EU AI Act Article 12 (forensic reproducibility) and Article 14 (human oversight), plus DORA and MiFID — the deal-unblocking dossier no competitor offers at EU-FS depth. See [../compliance/regulatory-mapping.md](../compliance/regulatory-mapping.md).
+6. **Optional ML-DSA (FIPS 204) for long retention.** For evidence whose retention horizon outlives classical-signature assumptions, signatures may additionally use the post-quantum ML-DSA scheme (FIPS 204), so the long-tail dossier remains verifiable against a future cryptanalytic threat.
+7. **Regulatory mapping (BUILD).** The evidence is mapped to EU AI Act Article 12 (forensic reproducibility) and Article 14 (human oversight), plus DORA and MiFID — the deal-unblocking dossier no competitor offers at EU-FS depth. See [../compliance/regulatory-mapping.md](../compliance/regulatory-mapping.md).
 
-Underneath, the assembled stack is OpenTelemetry → hash-chain → Merkle → Rekor/Trillian → RFC3161 (see [../tech-stack.md](../tech-stack.md)).
+Underneath, the assembled stack is OpenTelemetry → hash-chain → Merkle → Tessera (self-hosted) + cross-org tlog-witness → internal HSM-backed RFC3161 TSA → RFC8785 JCS, with optional ML-DSA for long retention (see [../tech-stack.md](../tech-stack.md)).
 
 **Honesty anchor (stated as sold):** the evidence is *regulator-grade, forensic-reproducible*. "Court-admissible" is case-by-case and jurisdiction-dependent UNVERIFIED — Article 12 forensic reproducibility is not a guarantee of evidentiary admissibility, and the two must never be conflated; the Verifier persona punishes overclaiming.
 
@@ -36,13 +39,15 @@ Underneath, the assembled stack is OpenTelemetry → hash-chain → Merkle → R
 
 ### Positive
 
-- The external anchor closes the insider/key-holder rewrite threat that unsigned and self-clocked designs leave open — the strongest single differentiator at S4.
-- JCS + `kid`-embedded witness make the evidence independently verifiable offline, which is what an auditor actually needs.
+- The cross-org witness cosignature closes the insider/key-holder rewrite threat that unsigned and self-clocked designs leave open — **and does so inside the air gap**, which a public-anchor design cannot. This resolves the air-gap-vs-public-anchor tension: independence comes from a different trust domain reachable without egress, not from internet connectivity, so the strongest S4 differentiator survives in exactly the fail-closed deployments the EU-FS buyers mandate.
+- Self-hosted Tessera + internal HSM-backed RFC3161 TSA keep the entire anchoring path within the deployment boundary, so anchoring never depends on forbidden egress and cannot be silently disabled in regulated environments.
+- JCS + `kid`-embedded witness make the evidence independently verifiable offline, which is what an auditor actually needs; optional ML-DSA (FIPS 204) keeps the long-retention dossier verifiable against a future post-quantum threat.
 - The signed evidence store becomes the agent-action system-of-record: leaving Provna means losing audit history, the strongest switching cost.
 - The Article 12/14 + DORA + MiFID mapping is the dossier that turns the Verifier from a veto into a sign-off.
 
 ### Negative
 
-- S4 is mechanism-commodity (OTel/Rekor/RFC3161); our edge is assembly + FS regulatory mapping, not a cryptographic breakthrough — it is not defensible in isolation.
-- External anchoring adds latency and a dependency on a transparency log / TSA availability; anchoring must be batched and must fail-closed without becoming a money-path bottleneck.
+- S4 is mechanism-commodity (OTel/Tessera/tlog-witness/RFC3161); our edge is assembly + air-gap-native anchoring + FS regulatory mapping, not a cryptographic breakthrough — it is not defensible in isolation.
+- The cross-organization witness carries a real **onboarding and governance cost**: an independent trust domain must agree to act as witness, witness keys must be pre-provisioned and rotated on both sides of the air gap, and the relationship needs governance (who the witness is, what they attest, how a witness outage or compromise is handled). This is operational overhead and a customer-side dependency, not a drop-in.
+- Internal anchoring still adds latency and a dependency on the self-hosted log / TSA availability; anchoring must be batched and must fail-closed without becoming a money-path bottleneck.
 - The honesty boundary ("regulator-grade, not court-admissible") must be held in every sales surface; the discipline is a constraint, not a feature.

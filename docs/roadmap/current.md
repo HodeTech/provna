@@ -21,7 +21,7 @@ flowchart TD
     S1["Step 1 NAME / TRADEMARK CLEARANCE\nCRITICAL PATH - blocks brand/domain/code"]
     S2["Step 2 S2 compensation-harness PoC\none connector A to A-inverse round-trip"]
     S3["Step 3 S1 fusion PoC + AgentDojo\nASR and utility-tax together"]
-    S4["Step 4 S4 signed + anchored evidence prototype\nJCS + Ed25519 + Rekor + kid"]
+    S4["Step 4 S4 signed + anchored evidence prototype\nJCS + Ed25519 + Tessera transparency log + kid"]
     S5["Step 5 design-partner outreach\n8-10 interviews to 2-3 payment-intent pilots"]
     S1 ==> S2
     S2 -. parallel .-> S3
@@ -45,7 +45,7 @@ Stand up the CaMeL P/Q-LLM isolation skeleton (the Q-LLM cannot call tools; it r
 
 ### Step 4 - S4 signed + anchored evidence-pack prototype
 
-Build the evidence pack: JCS (RFC8785) canonicalization + Ed25519 signature + Rekor external anchor + kid-embedded portable witness + persist the BAR-style governance-failure signal as a signed audit event + policy_snapshot_ref on every decision. Show the external-anchor difference as the differentiator versus competitors that self-clock and cannot stop an insider rewrite. This is milestone M3. Keep the honesty anchor: regulator-grade forensic-reproducible, not a court-admissibility claim.
+Build the evidence pack: JCS (RFC8785) canonicalization + Ed25519 signature + a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature (with Rekor v2 as the reference design) + kid-embedded portable witness + persist the BAR-style governance-failure signal as a signed audit event + policy_snapshot_ref on every decision. Show the external-anchor difference as the differentiator versus competitors that self-clock and cannot stop an insider rewrite. This is milestone M3. Keep the honesty anchor: regulator-grade forensic-reproducible, not a court-admissibility claim.
 
 ### Step 5 - Design-partner outreach
 

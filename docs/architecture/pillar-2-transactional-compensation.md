@@ -10,7 +10,7 @@
 
 S2 is the gate that turns a side-effecting agent call into a **reversible contract**. Within the guarded saga step it owns the third gate — the ACTION CONTRACT: `idempotent -> dry-run -> HITL -> execute -> compensate`. Its job is not to inspect or to authorize; it is to ensure that every WRITE Provna lets through can be **previewed before it happens, made exactly-once, and undone after it happens** — either by a per-connector inverse (A⁻¹) or, where no honest inverse exists, by a two-phase hold (auth -> capture -> void) that never lets the irreversible effect fire in the first place.
 
-This is the pillar Provna **builds** as its deepest IP. The other three pillars consume or assemble commodity substrate (a PDP, a durable-execution engine, an audit-anchoring stack); S2 consumes only the *mechanism* (the saga/durable-execution machinery from DBOS Transact) and builds the *content* — the verified, version-pinned library of inverse operations and the harness that proves they actually round-trip. **The mechanism is a commodity; the content is the company.**
+This is the pillar Provna **builds** as its deepest IP. The other three pillars consume or assemble commodity substrate (a PDP, a durable-execution engine, an audit-anchoring stack); S2 consumes only the *mechanism* (the saga/durable-execution machinery from DBOS Transact + Postgres, held behind a thin `SagaCoordinator` interface) and builds the *content* — the verified, version-pinned library of inverse operations and the harness that proves they actually round-trip. **The mechanism is a commodity; the content is the company.**
 
 ```mermaid
 flowchart LR
@@ -53,10 +53,10 @@ S2 is five components layered on a consumed saga substrate. Each is a piece of *
 | Component | What it does | Competitor status |
 |---|---|---|
 | **Per-connector inverse (A⁻¹)** | A real, named inverse operation per (connector, action): Stripe `void` / `refund`, NetSuite reversing journal entry, payment-rail reversal. Not a generic "delete"; the semantically-correct undo for that specific effect. | ACP has settlement-proof but no auth/capture/void/refund. MVAR's nearest is a forward credential kill-switch. None ship an inverse catalog. |
-| **Round-trip test harness** | Automated `A -> A⁻¹` verification in a sandbox: apply the action, apply its inverse, assert the system state equals the pre-action state. Runs in CI so every inverse carries a machine-checked round-trip proof. | Exists in **none** of the four. This harness is the engine that lets the catalog grow with confidence rather than hope. |
+| **Round-trip test harness** | Automated `A -> A⁻¹` verification in a gVisor-isolated runner: apply the action, apply its inverse, assert the system state equals the pre-action state. Connector round-trips are air-gap-native — replayed offline from recorded VCR-style cassettes — so the proof runs in CI without network egress. Every inverse carries a machine-checked round-trip proof. | Exists in **none** of the four. This harness is the engine that lets the catalog grow with confidence rather than hope. |
 | **Observe-probe** | After executing (or compensating), read the *real* downstream state to confirm the side effect actually occurred / was actually undone. Answers "did the effect happen?" and "did the undo complete?" rather than trusting the API return code. | None. Competitors trust the call result; Provna verifies against ground truth. |
 | **Dry-run** | An effect-free rehearsal on the money path before any real write — the preview the HITL approver and the audit pack are built on. | None. Verity/Temporal/DBOS have no preview-before-execute on the action itself. |
-| **API-version-pinned auto-runnable catalog** | Inverse definitions pinned to the connector's API version and promoted to "auto-runnable" only after passing the round-trip harness. New customers inherit the catalog; drift between API versions is detected, not silently trusted. | None. This pinning + auto-runnable promotion is what makes the library *inheritable* and therefore a flywheel rather than a per-customer rewrite. |
+| **API-version-pinned auto-runnable catalog** | Inverse definitions pinned to the connector's API version and promoted to "auto-runnable" only after passing the round-trip harness. A separate connected re-record station refreshes the cassettes and runs `oasdiff` (OpenAPI diff) as a drift gate before a connector is promoted; new customers inherit the catalog; drift between API versions is detected, not silently trusted. | None. This pinning + auto-runnable promotion is what makes the library *inheritable* and therefore a flywheel rather than a per-customer rewrite. |
 
 The atomic-unit warning applies here: split S2 from S1 and the moat dilutes. **Compensation without IFC is just durable-execution; IFC without compensation is just a guardrail.** The value is the fusion — an inverse that fires *because* a post-execution IFC violation was detected is something no compensation-only or inspection-only product can produce.
 
@@ -64,14 +64,16 @@ The atomic-unit warning applies here: split S2 from S1 and the moat dilutes. **C
 
 ## The flywheel
 
-The catalog grows by a self-reinforcing loop. A new connector enters; an LLM proposes the inverse from the connector's OpenAPI spec; the round-trip harness tests it in a sandbox; on pass it is promoted to the API-version-pinned auto-runnable catalog and every customer inherits it; on fail the action is routed to a two-phase (auth/capture/void) gate or human-approved path instead of being sold a false undo. Each cycle the library gets denser and the cost of the next connector drops.
+The catalog grows by a self-reinforcing loop. A new connector enters; an LLM proposes the inverse from the connector's OpenAPI spec; the gVisor-isolated round-trip harness tests it offline against recorded cassettes; on pass — and after the connected re-record station clears the `oasdiff` drift gate — it is promoted to the API-version-pinned auto-runnable catalog and every customer inherits it; on fail the action is routed to a two-phase (auth/capture/void) gate or human-approved path instead of being sold a false undo. Each cycle the library gets denser and the cost of the next connector drops.
 
 ```mermaid
 flowchart TD
     NEW(["new connector x action x param"]) --> PROP["LLM proposes A inverse from OpenAPI spec"]
-    PROP --> TEST{"sandbox round-trip test\nA then A inverse, state equal?"}
-    TEST -->|"passed"| PROMO["promote to auto-runnable catalog\nAPI-version-pinned"]
+    PROP --> TEST{"gVisor round-trip test, offline cassettes\nA then A inverse, state equal?"}
+    TEST -->|"passed"| DRIFT{"oasdiff drift gate\nre-record station, OpenAPI stable?"}
     TEST -->|"failed"| TWOPHASE["two-phase gate\nauth then capture then void\nor human-approved path"]
+    DRIFT -->|"no drift"| PROMO["promote to auto-runnable catalog\nAPI-version-pinned"]
+    DRIFT -->|"drift"| TWOPHASE
     PROMO --> GROW["library grows, observe-probe attached"]
     GROW --> INHERIT["new customers inherit the catalog"]
     INHERIT --> NEW
@@ -85,7 +87,9 @@ flowchart TD
 
 ## DBOS substrate — consume the mechanism, build the content
 
-S2 **consumes** the saga / durable-execution mechanism from DBOS Transact (Postgres-backed in the MVP; Temporal is the scale-target option). Durability, resumability, and exactly-once step execution are commodity substrate — DBOS gives them away. Provna does **not** rewrite the saga engine.
+S2 **consumes** the saga / durable-execution mechanism from DBOS Transact + Postgres now, for the MVP and early production. Durability, resumability, and exactly-once step execution are commodity substrate — DBOS gives them away. Provna does **not** rewrite the saga engine.
+
+The substrate is held strictly behind the gRPC ActionGuard seam plus a thin `SagaCoordinator` interface, so the durable-execution engine is judged on its own merits and can be swapped without touching the compensation content. **Temporal is a triggered contingency, not a scheduled migration:** a Temporal adapter spike is pre-written, but the team migrates only if a concrete trigger fires — multi-tenant fan-out, a Postgres throughput/latency ceiling, or a buyer mandate. The compensation library/content remains the moat (BUILD) independent of which substrate sits behind the interface. See [../architecture/tech-stack-analysis.md](../architecture/tech-stack-analysis.md) for the substrate evaluation.
 
 What Provna builds on top is the part the substrate does not have: the **verified, FS-back-office-specific, version-pinned inverse library + observe-probes + round-trip harness.** Stand up the saga machinery in a weekend; spend the years on compensation content. This is the single sentence that governs the pillar:
 
@@ -102,7 +106,7 @@ Provna must **never sell "undo everything."** That promise is dishonest and the 
 - **Compensation is sometimes genuinely impossible.** Some side effects have no inverse — a sent email, an executed irreversible settlement, an external notification already read. For these, the answer is **not** a fake undo; it is to **prefer two-phase from the start**: hold in an authorized intermediate state (auth -> capture -> void) so the irreversible effect can be cancelled *before* it fires rather than "reversed" after. This is the escrow metaphor made literal: value is held until conditions are met, then captured or voided.
 - **"Did the side effect actually happen?"** is a real question with no free answer. Network partitions, partial failures, and ambiguous API responses mean the call result cannot be trusted. The **observe-probe** exists precisely to read the real downstream state and resolve the ambiguity rather than guess.
 - **Compensation can itself fail.** The inverse is another side-effecting call and can error, partial-complete, or hit a system in a changed state. Fail-closed discipline applies: a failed compensation is a signed audit event and an escalation, never a silent swallow. The observe-probe confirms the undo actually completed; if it did not, that is surfaced, not hidden.
-- **API-version drift.** An inverse verified against connector API v1 may be wrong against v2. This is why every catalog entry is **API-version-pinned** and why drift is *detected* (the harness re-runs against the new version) rather than silently trusted. An entry whose pinned version no longer matches the live connector is demoted from auto-runnable until re-verified.
+- **API-version drift.** An inverse verified against connector API v1 may be wrong against v2. This is why every catalog entry is **API-version-pinned** and why drift is *detected* (the re-record station re-runs `oasdiff` and the harness re-tests against the new version) rather than silently trusted. An entry whose pinned version no longer matches the live connector is demoted from auto-runnable until re-verified.
 
 ---
 

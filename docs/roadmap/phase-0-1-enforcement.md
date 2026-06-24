@@ -62,7 +62,7 @@ Phase 0->1 is done when all of the following hold:
 
 - Broad finance-ops connector expansion and second-vertical work (Phase 1 / Phase 2).
 - Open-sourcing policy/SDK (Phase 1).
-- The inline Go/Rust hot-path PEP rewrite, Temporal, OpenFGA/biscuit, full Rekor/Trillian/witness stack - the production-target stack is a Phase-1 hardening goal; this phase continues on the MVP stack (TS/Python + DBOS + Postgres + Cedar + Claude + hash-chain + external anchor), hardened where enforcement demands it.
+- The inline Go (Rust reserved for a future hot leaf with a proven trigger) hot-path PEP rewrite, DBOS (Temporal kept as a seam-isolated contingency triggered only by multi-tenant fan-out / a Postgres ceiling / a buyer mandate, NOT a scheduled migration) at scale, OpenFGA (deferred behind a relationship-resolver interface until a partner is provably ReBAC)/biscuit, full self-hosted transparency log (Tessera) + internal HSM-backed RFC3161 TSA + cross-organization witness cosignature stack - the production-target stack is a Phase-1 hardening goal; this phase continues on the MVP stack (TS/Python + DBOS + Postgres + Cedar + Claude + hash-chain + external anchor), hardened where enforcement demands it.
 - IFC premium tier and agent-action system-of-record positioning (Phase 2).
 - Proving vendor neutrality across LangChain / OpenAI-SDK / custom (Phase 1); this phase may still run primarily through the first reference integration seam.
 - ISO 42001 / EU AI Act formal certification path (Phase 1). SOC 2 starts here; certifications come later.
@@ -87,7 +87,7 @@ The keystone deliverable. One scenario must show both halves of the moat and pro
 
 - IFC half (S1): a value carrying a hidden injection (the canonical case: an attacker IBAN smuggled inside an untrusted invoice) is architecturally prevented from reaching a sensitive sink, because the sink policy requires the value to originate from a verified master record. The block is a lattice + sink-policy rule, not a classifier guess. Honest guarantee restated: untrusted data cannot reach a sensitive sink unless an explicitly-typed policy authorizes the flow; implicit-flow / side-channel leakage is not guaranteed.
 - Compensation half (S2): a committed side effect (for example a payment release or an ERP posting) is reversed via its registered inverse, and observe-probe reads real system state to confirm the reversal completed. For irreversible money movement, demonstrate the two-phase (auth -> capture -> void) path instead of a false "undo everything" claim.
-- Evidence (S4): both the block and the reversal emit RFC8785 JCS-canonicalized, Ed25519-signed events with kid embedded and an external anchor (RFC3161 TSA / Rekor), plus policy_snapshot_ref. An independent verifier validates them offline.
+- Evidence (S4): both the block and the reversal emit RFC8785 JCS-canonicalized, Ed25519-signed events with kid embedded and an external anchor (a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature, with Rekor v2 as the reference design), plus policy_snapshot_ref. An independent verifier validates them offline.
 - Run the scenario through AgentDojo and report ASR and utility-tax together - never ASR alone - so the result proves we did not fall into the "block everything" trap.
 
 **Acceptance:** a scripted adversarial run shows (a) the injection blocked at the IFC gate, (b) a committed action reversed and observe-probe-confirmed, (c) offline-verifiable signed+anchored evidence for both, (d) an AgentDojo report with both ASR and utility-tax. A design partner's risk committee accepts the evidence pack.
@@ -152,7 +152,7 @@ This phase cannot start until the Phase-0 exit gate holds. Specifically it depen
 
 - **A working guarded saga step in shadow mode** across all four gates: IFC gate (S1), AND-gate authz (S3), action contract with idempotency + one-click compensation (S2), and signed+anchored audit (S4) - all wired through the ActionGuard seam (decide -> commit -> compensate).
 - **One connector and one action-type** (Stripe or NetSuite) with idempotency and one-click compensation already working in shadow.
-- **Signed, anchored evidence packs v1** (JCS + Ed25519 + Rekor + kid, Article 12/14 mapping) generated from real shadow traffic - the raw material the adversarial proof and the risk-committee dossier build on.
+- **Signed, anchored evidence packs v1** (JCS + Ed25519 + a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature, with Rekor v2 as the reference design + kid, Article 12/14 mapping) generated from real shadow traffic - the raw material the adversarial proof and the risk-committee dossier build on.
 - **2-3 design partners in shadow mode** producing real traffic, with at least one carrying a concrete blocked agent project and a champion with budget and urgency. Without a partner whose project is actually blocked, the 90-day pilot metric cannot be met.
 - **Resolved-enough name/brand posture** to sign a commercial contract (the trademark/domain clearance is on the critical path; a paid contract should not be signed under an unresolved brand). See [current.md](current.md).
 

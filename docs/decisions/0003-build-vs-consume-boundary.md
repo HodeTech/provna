@@ -45,6 +45,6 @@ The scope test that enforces this boundary: a capability is BUILT only if it fal
 
 ### Negative
 
-- We take a hard dependency on consumed substrates (DBOS/Temporal, Cedar/OpenFGA, Rekor/Trillian); their roadmaps, licensing, and breaking changes become our risk surface.
+- We take a hard dependency on consumed substrates (DBOS with Temporal kept as a seam-isolated contingency, Cedar with OpenFGA deferred behind a relationship-resolver interface, a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature with Rekor v2 as the reference design); their roadmaps, licensing, and breaking changes become our risk surface.
 - The boundary requires constant discipline: every feature request must be tested against the build/consume line, and the temptation to "just build a bit of the PDP" to close a deal is a standing threat to focus.
 - Differentiation in the consumed gates (S3/S4) is assembly plus FS mapping, not breakthrough - meaning our position there is defensible in substance but not in position, which sets the ~12-24 month clock the strategy runs against.

@@ -19,7 +19,7 @@ flowchart TD
             PEP --> G1 --> G2 --> G3 --> G4
         end
         subgraph CTRL["CONTROL PLANE -- customer VPC or air-gapped"]
-            PDP["PDP -- Cedar plus OpenFGA, AuthZEN"]
+            PDP["PDP -- Cedar, OpenFGA deferred behind a relationship-resolver interface until a partner is provably ReBAC"]
             COMP["Compensation library plus round-trip harness"]
             LEDGER["Evidence ledger -- hash-chain, Merkle, external anchor"]
             HITL["Human-oversight gate -- Article 14"]
@@ -47,9 +47,9 @@ The position is `agent <-> Provna <-> upstream`. The agent proposes; Provna deci
 
 Provna is split deliberately, and the split maps to the technology choices in [../tech-stack.md](../tech-stack.md).
 
-**Data plane (inline, hot path).** The PEP and the four-gate chain run on the action's critical path. They must be fast, deterministic, and fail-closed: any error blocks the action, with no downgrade path. The production-target hot path is implemented in a systems language (Go/Rust) so that inline enforcement does not add unacceptable money-path latency. The MVP runs the same logic in TS/Python in a single container to move fast; hardening the hot path is a later-phase concern.
+**Data plane (inline, hot path).** The PEP and the four-gate chain run on the action's critical path. They must be fast, deterministic, and fail-closed: any error blocks the action, with no downgrade path. The production-target hot path is implemented in a systems language (Go, with Rust reserved for a future hot leaf with a proven trigger) so that inline enforcement does not add unacceptable money-path latency. The MVP runs the same logic in TS/Python in a single container to move fast; hardening the hot path is a later-phase concern.
 
-**Control plane (customer VPC / air-gapped).** The PDP, the compensation library and round-trip harness, the human-oversight gate, and the evidence ledger live alongside the data plane but off the synchronous hot path where possible. The PDP is *consumed* (Cedar/OpenFGA + AuthZEN); the compensation library and the evidence ledger are the *built* IP. Deployment is into the customer's own environment (VPC or air-gapped), because the buyer is a regulated FS institution that will not export money-path traffic.
+**Control plane (customer VPC / air-gapped).** The PDP, the compensation library and round-trip harness, the human-oversight gate, and the evidence ledger live alongside the data plane but off the synchronous hot path where possible. The PDP is *consumed* (Cedar, with OpenFGA deferred behind a relationship-resolver interface until a partner is provably ReBAC); the compensation library and the evidence ledger are the *built* IP. Deployment is into the customer's own environment (VPC or air-gapped), because the buyer is a regulated FS institution that will not export money-path traffic.
 
 **The LLM is provider-agnostic and never on the trust boundary.** The model is used for the quarantined Q-LLM, for proposing candidate inverse operations, and for risk scoring — never as the thing that grants permission. The deterministic guarantee is anchored in the lattice and sink-policy, not in any model output. See [pillar-1-information-flow-control.md](pillar-1-information-flow-control.md).
 

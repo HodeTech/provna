@@ -31,7 +31,7 @@ flowchart LR
 
 ## Why CONSUME + thin-resolver-BUILD
 
-Runtime authorization is the most saturated layer of the agent-control market. Generic per-action authorization has been commoditized by mature PDPs (Cedar, OpenFGA), standardized by AuthZEN 1.0, and consolidated by identity incumbents. The defining market datapoint: **CrowdStrike acquired SGNL for ~$740M** — SGNL ships very strong per-action authorization plus CAEP and transaction-token primitives. Okta/Entra/CrowdStrike own this space outright.
+Runtime authorization is the most saturated layer of the agent-control market. Generic per-action authorization has been commoditized by mature PDPs (Cedar, and OpenFGA for ReBAC), standardized by AuthZEN 1.0, and consolidated by identity incumbents. The defining market datapoint: **CrowdStrike acquired SGNL for ~$740M** — SGNL ships very strong per-action authorization plus CAEP and transaction-token primitives. Okta/Entra/CrowdStrike own this space outright.
 
 [OPINION] The strategic consequence is blunt: if Provna pitches "better authorization" to a CISO, it gets crushed by incumbents who already sell exactly that. Provna's pitch leans on the S1+S2 fusion; S3 is something Provna **aligns with and consumes**, not something it competes on. Defensibility in substance is S1+S2; S3 (and S4 mechanism) is commodity to be assembled, with a ~12-24 month window before the absorption wave closes the gap [OPINION].
 
@@ -42,7 +42,7 @@ So the BUILD surface in S3 is intentionally narrow — just the parts the commod
 3. **Genuinely-implemented transitive revocation** with per-hop signature verification.
 4. **The 5th-dimension behavioral/temporal admission layer** — a context-scoped, post-AND-gate orthogonal risk layer.
 
-Everything else — the policy language, relationship graph, the AuthZEN PEP/PDP wire protocol — is consumed. See [./build-vs-consume.md](./build-vs-consume.md).
+Everything else — the policy language (embedded Cedar), relationships (modelled as Cedar entities for the MVP, behind a relationship-resolver seam), the AuthZEN PEP/PDP wire protocol — is consumed. See [./build-vs-consume.md](./build-vs-consume.md).
 
 ---
 
@@ -52,7 +52,7 @@ The core resolver evaluates a **conjunction of four independent axes**. The acti
 
 | Axis | Question | Source |
 |------|----------|--------|
-| **agent** | Is this agent identity authenticated and entitled to this capability class? | PDP (Cedar/OpenFGA) + agent identity |
+| **agent** | Is this agent identity authenticated and entitled to this capability class? | PDP (embedded Cedar) + agent identity |
 | **user** | On whose behalf is the agent acting, and is that principal entitled? | PDP + transaction-token `sub` |
 | **delegation** | Does an unbroken, signed, non-revoked delegation chain carry this authority, and do its accumulated caveats permit this exact action? | BUILD: attenuation + revocation engine |
 | **intent** | Does the declared purpose match the action, and is this capability in-scope for that intent? | BUILD: resolver, bound to S1 intent label and S2 action type |
@@ -72,7 +72,7 @@ flowchart TD
     I -->|pass| OK["AND-gate PASS<br/>proceed to 5th dimension"]
 ```
 
-The PDP (Cedar embedded, OpenFGA for relationship graphs) resolves the `agent` and `user` legs from policy and relationship data. The resolver is the thin glue that assembles the four leg-results into a single AND verdict and emits a `policy_snapshot_ref` (a `policy_hash`) with every decision so the verdict is forensically reproducible [S4].
+The PDP (**embedded Cedar** for the MVP, with relationships modelled as Cedar entities) resolves the `agent` and `user` legs from policy and relationship data. The resolver is the thin glue that assembles the four leg-results into a single AND verdict and emits a `policy_snapshot_ref` (a `policy_hash`) with every decision so the verdict is forensically reproducible [S4].
 
 ---
 
@@ -143,16 +143,17 @@ flowchart LR
 
 ---
 
-## CONSUME the PDP: Cedar / OpenFGA + AuthZEN 1.0
+## CONSUME the PDP: Cedar-embedded for the MVP + AuthZEN 1.0
 
-Provna does not build a policy engine. The `agent` and `user` legs are resolved by consuming a mature PDP, and Provna's resolver is the PEP that calls it over a standard protocol:
+Provna does not build a policy engine. The `agent` and `user` legs are resolved by consuming a mature PDP, and Provna's resolver is the PEP that calls it over a standard protocol. For the MVP the PDP is **embedded Cedar only** — a single, deliberately-bounded choice:
 
-- **Cedar** — embedded policy evaluation for attribute/permission rules (fast, in-process, formally analyzable).
-- **OpenFGA** — relationship-based access for graph-shaped entitlements (who-can-act-for-whom, group/resource hierarchies).
-- **AuthZEN 1.0** — the standard PEP <-> PDP decision protocol. Aligning on AuthZEN is a **real differentiator**: the leading horizontal substrate ships a PDP but does not implement AuthZEN, so Provna's AuthZEN alignment is a concrete interoperability advantage, not just box-checking.
-- **CAEP / transaction-tokens** — align the `agent`/`user` legs with the IETF transaction-token model: the token's `sub` carries the on-behalf-of principal (the `user` leg) and `act` carries the acting agent (the `agent` leg). This keeps Provna interoperable with the same primitives incumbents (e.g. the SGNL/CrowdStrike line) standardize on, rather than fighting them. Delegation/attenuation standards remain draft (not yet RFC) UNVERIFIED, so Provna implements caveat-attenuation directly while staying wire-compatible.
+- **Cedar (embedded), MVP PDP** — in-process policy evaluation for attribute/permission rules. Cedar is the right MVP choice on four counts that matter for an inline, air-gappable money-path gate: it is **formally verified** (the Cedar evaluator and its analysis are mechanized), it keeps the decision in a **single failure domain** (no network hop to a separate authorization service on the hot path), it gives the **lowest latency** (in-process evaluation), and it has the **best air-gap story** (no external service to provision behind the gap). See [../architecture/tech-stack-analysis.md](../architecture/tech-stack-analysis.md).
+- **Relationships as Cedar entities** — graph-shaped entitlements (who-can-act-for-whom, group/resource hierarchies) are modelled **as Cedar entities and their parent/ancestor relations**, resolved inside Cedar rather than by a separate relationship engine. This keeps the whole `agent`/`user` resolution in one formally-verified, in-process evaluation for the MVP.
+- **OpenFGA deferred behind a relationship-resolver interface** — Provna defines a thin `RelationshipResolver` seam that the PDP path calls to answer relationship queries. For the MVP this seam is backed by Cedar entities. **OpenFGA is not built into the MVP**; it is added behind that same interface **only when a design partner's entitlements are provably ReBAC** (genuinely relationship-shaped at a scale or shape Cedar entities cannot express cleanly). The seam means adopting OpenFGA later is a backing-implementation swap, not a re-architecture of the gate. See [./build-vs-consume.md](./build-vs-consume.md).
+- **AuthZEN 1.0** — the standard PEP <-> PDP decision protocol. Aligning on AuthZEN is a **real differentiator**: the leading horizontal substrate ships a PDP but does not implement AuthZEN, so Provna's AuthZEN alignment is a concrete interoperability advantage, not just box-checking. Keeping the PEP <-> PDP boundary AuthZEN-shaped is also what makes the relationship-resolver seam (and any future OpenFGA backing) cleanly substitutable.
+- **biscuit + transaction-tokens** — align the `agent`/`user` legs with the IETF transaction-token model: the token's `sub` carries the on-behalf-of principal (the `user` leg) and `act` carries the acting agent (the `agent` leg), and **biscuit** carries the delegated, caveat-attenuated authority (the `delegation` leg) as the attenuation wire-format. This keeps Provna interoperable with the same primitives incumbents (e.g. the SGNL/CrowdStrike line) standardize on, rather than fighting them. Delegation/attenuation standards remain draft (not yet RFC) UNVERIFIED, so Provna implements caveat-attenuation directly (biscuit-shaped) while staying wire-compatible.
 
-A Rust PDP from the horizontal-substrate ecosystem is a candidate to technically evaluate as the consumed engine — but only after confirming it lacks the delegation/attenuation we build; that gap is precisely Provna's thin-BUILD surface, and it must not be confused with the horizontal substrate's own offering (the "Specification" vs "Protocol" naming collision). See [../positioning.md](../positioning.md). Pinned versions for the consumed PDP and token libraries live in [../tech-stack.md](../tech-stack.md).
+A Rust PDP from the horizontal-substrate ecosystem is **not** the MVP choice (embedded Cedar wins on the single-failure-domain, latency, and air-gap criteria above); it remains a candidate to technically evaluate only if a future trigger demands it, and only after confirming it lacks the delegation/attenuation we build — that gap is precisely Provna's thin-BUILD surface, and it must not be confused with the horizontal substrate's own offering (the "Specification" vs "Protocol" naming collision). See [../positioning.md](../positioning.md) and [../architecture/tech-stack-analysis.md](../architecture/tech-stack-analysis.md). Pinned versions for the consumed PDP and token libraries live in [../tech-stack.md](../tech-stack.md).
 
 ---
 
