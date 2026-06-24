@@ -30,7 +30,7 @@ Every file starts with a single H1 (`#`), and **no YAML front-matter**. Immediat
 **Related:** [../vision.md](../vision.md), [../architecture/overview.md](../architecture/overview.md)
 ```
 
-- `Status` — `Draft`, `Proposed`, `Accepted`, `Deprecated`, or `Superseded` as appropriate to the doc. (ADRs use the status vocabulary in [adr-template.md](adr-template.md).)
+- `Status` — a short phrase for the doc's lifecycle. ADRs use the vocabulary in [adr-template.md](adr-template.md) (`Proposed` / `Accepted` / `Deprecated` / `Superseded`). A planning-phase doc uses a descriptive phrase — `Planned (pre-build)`, `Analysis (pre-build)`, or `Living` / `Pre-build planning` for an index or living doc. An **index or living doc may carry its status as a `> Status:` blockquote** under the H1 instead of a bold line.
 - `Last updated` — `YYYY-MM-DD`.
 - `Related` — relative markdown links to other public docs. Omit the line if there are none.
 

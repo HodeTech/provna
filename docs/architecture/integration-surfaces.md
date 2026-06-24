@@ -1,6 +1,6 @@
 # Integration Surfaces
 
-**Status:** Planning (pre-build)
+**Status:** Planned (pre-build)
 **Last updated: 2026-06-24**
 **Related:** [overview.md](overview.md), [action-lifecycle.md](action-lifecycle.md), [build-vs-consume.md](build-vs-consume.md), [../positioning.md](../positioning.md), [../decisions/0009-action-guard-seam-vendor-neutral.md](../decisions/0009-action-guard-seam-vendor-neutral.md)
 

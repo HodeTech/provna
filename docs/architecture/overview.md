@@ -1,6 +1,6 @@
 # Architecture Overview
 
-**Status:** Planning (pre-build)
+**Status:** Planned (pre-build)
 **Last updated: 2026-06-24**
 **Related:** [README.md](README.md), [action-lifecycle.md](action-lifecycle.md), [build-vs-consume.md](build-vs-consume.md), [integration-surfaces.md](integration-surfaces.md), [../tech-stack.md](../tech-stack.md)
 

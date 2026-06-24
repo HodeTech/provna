@@ -1,6 +1,6 @@
 # Architecture
 
-**Status:** Planning (pre-build)
+**Status:** Planned (pre-build)
 **Last updated: 2026-06-24**
 **Related:** [../vision.md](../vision.md), [../product-scope.md](../product-scope.md), [../positioning.md](../positioning.md), [../tech-stack.md](../tech-stack.md)
 

@@ -2,7 +2,7 @@
 
 **Status:** Pre-build planning
 **Last updated: 2026-06-24**
-**Related:** [current.md](current.md) - [phase-0-mvp.md](phase-0-mvp.md) - [phase-0-1-enforcement.md](phase-0-1-enforcement.md) - [phase-1-scale.md](phase-1-scale.md) - [phase-2-platform.md](phase-2-platform.md) - [../risks/risk-register.md](../risks/risk-register.md) - [../business/design-partner-plan.md](../business/design-partner-plan.md)
+**Related:** [current.md](current.md), [phase-0-mvp.md](phase-0-mvp.md), [phase-0-1-enforcement.md](phase-0-1-enforcement.md), [phase-1-scale.md](phase-1-scale.md), [phase-2-platform.md](phase-2-platform.md), [../risks/risk-register.md](../risks/risk-register.md), [../business/design-partner-plan.md](../business/design-partner-plan.md)
 
 This file is the MAP. It routes; it does not duplicate detail. Each phase file owns its own milestones, deliverables, and exit criteria. Read [current.md](current.md) first to see what is active right now.
 

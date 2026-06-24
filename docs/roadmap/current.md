@@ -2,7 +2,7 @@
 
 **Status:** Pre-build - first 5 concrete steps in flight
 **Last updated: 2026-06-24**
-**Related:** [README.md](README.md) - [phase-0-mvp.md](phase-0-mvp.md) - [../risks/risk-register.md](../risks/risk-register.md) - [../business/design-partner-plan.md](../business/design-partner-plan.md)
+**Related:** [README.md](README.md), [phase-0-mvp.md](phase-0-mvp.md), [../risks/risk-register.md](../risks/risk-register.md), [../business/design-partner-plan.md](../business/design-partner-plan.md)
 
 Read this first. This is the live status page: where Provna actually is today and the next five concrete moves. For the full timeline see [README.md](README.md); for the first roadmap phase see [phase-0-mvp.md](phase-0-mvp.md).
 

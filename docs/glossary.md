@@ -48,7 +48,7 @@ This glossary defines the load-bearing terms used across Provna's documentation.
 
 **Data-plane** — The inline, hot-path Policy Enforcement Point: the PEP, IFC engine, and action-contract logic that sit synchronously in front of every side-effecting call. Written in Go/Rust for latency. Contrast *control-plane*. See [tech-stack.md](tech-stack.md).
 
-**decide** — The first ActionGuard method: run the IFC gate, the AND-gate authorization, and risk tiering, returning a verdict (allow / block / require-approval / transform; transform = allow but with the arguments rewritten or narrowed first, e.g. redacting an untrusted field before the sink). Context: S1 + S3. See [architecture/action-lifecycle.md](architecture/action-lifecycle.md).
+**decide** — The first ActionGuard method: run the IFC gate, the AND-gate authorization, and risk tiering, returning a verdict (allow / block / require-approval / transform; transform = allow but with the arguments rewritten or narrowed first, e.g. redacting an untrusted field before the sink). A require-approval or transform verdict resolves — via the human-in-the-loop gate or an argument rewrite — into the action contract, whose terminal outcome is one of allow / block / dry-run / reverse (the four outcomes that leave the control plane). Context: S1 + S3. See [architecture/action-lifecycle.md](architecture/action-lifecycle.md).
 
 **Delegation** — One axis of the AND-gate: authority passed from a user to an agent (and agent-to-agent), carried as an attenuable, verifiable credential chain with transitive revocation. Context: S3. See [architecture/pillar-3-runtime-authorization.md](architecture/pillar-3-runtime-authorization.md).
 
@@ -162,7 +162,7 @@ This glossary defines the load-bearing terms used across Provna's documentation.
 
 **tlog-witness / witness cosignature** — The mechanism by which Provna's internal transparency-log checkpoint is countersigned by an independent trust domain whose root of trust is pre-provisioned on both sides of the air gap, yielding genuine third-party, cross-organization non-repudiation without public-network egress. Context: S4. See [architecture/tech-stack-analysis.md](architecture/tech-stack-analysis.md), [architecture/pillar-4-tamper-evident-audit.md](architecture/pillar-4-tamper-evident-audit.md).
 
-**Transaction token** — A short-lived, scoped credential (per the IETF transaction-tokens draft) carrying authorization context for a single action across services. Relevant to S3 delegation; the standards here are still draft, not RFC. Context: S3.
+**Transaction token** (also written transaction-token) — A short-lived, scoped credential (per the IETF transaction-tokens draft) carrying authorization context for a single action across services. Relevant to S3 delegation; the standards here are still draft, not RFC. Context: S3.
 
 **Transitive revocation** — Revoking a delegation such that every credential derived from it downstream is also revoked, with mandatory signature verification at each hop (no "zombie delegations"). Provna implements this genuinely, fail-closed. Context: S3.
 

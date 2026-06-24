@@ -1,6 +1,6 @@
 # Pillar 2 — Transactional Compensation (S2)
 
-**Status:** Planned (pre-build) — THE REAL MOAT
+**Status:** Planned (pre-build)
 **Last updated: 2026-06-24**
 **Related:** [../decisions/0005-s2-dbos-substrate-compensation-library.md](../decisions/0005-s2-dbos-substrate-compensation-library.md), [../roadmap/phase-0-mvp.md](../roadmap/phase-0-mvp.md), [action-lifecycle.md](action-lifecycle.md), [build-vs-consume.md](build-vs-consume.md), [pillar-1-information-flow-control.md](pillar-1-information-flow-control.md), [../tech-stack.md](../tech-stack.md)
 

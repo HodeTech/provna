@@ -10,7 +10,7 @@ Gate 2 of the guarded saga step answers a single question before any side effect
 
 Three forces shape the decision:
 
-- **S3 is the most saturated layer in the landscape.** Identity incumbents have consolidated agent authorization (e.g. CrowdStrike's acquisition of SGNL, ~$740M UNVERIFIED; Microsoft, Okta/Entra agent identity). A Policy Decision Point (PDP) is a commodity: Cedar, OpenFGA, and the AuthZEN 1.0 interop standard are mature and free. Trying to *own* the PDP is a losing bet.
+- **S3 is the most saturated layer in the landscape.** Identity incumbents have consolidated agent authorization (e.g. CrowdStrike's acquisition of SGNL, ~$740M; Microsoft, Okta/Entra agent identity). A Policy Decision Point (PDP) is a commodity: Cedar, OpenFGA, and the AuthZEN 1.0 interop standard are mature and free. Trying to *own* the PDP is a losing bet.
 - **The differentiated content is thin but real.** Competitor implementations show consistent gaps: per-action authz engines gate on `agent ∩ resource` but omit the *user* and *intent* axes; delegation is modeled as exact-string capability matching (no genuine attenuation); transitive revocation is specified normatively but implemented as a leaf-only nonce check, leaving "zombie delegations" alive, and signature verification is sometimes never actually invoked.
 - **Single-shot authorization is insufficient.** A stream of individually-valid requests can compose into a harmful pattern (e.g. many small reads that together exfiltrate, or repeated borderline transfers). A behavioral/temporal layer is needed — but a naive global request counter mixes unrelated state and produces availability attacks (benign reads contaminating a sensitive action into a false-DENY).
 

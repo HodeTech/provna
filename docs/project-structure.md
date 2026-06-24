@@ -19,8 +19,16 @@ flowchart TB
   end
   subgraph CP["control-plane -- Python / TS, off critical path"]
     RES["authz-resolver -- AND-gate, attenuation, admission (S3)"]
+    RELSEAM["relationship-resolver -- seam (S3)"]
     ORCH["compensation-orchestrator -- saga, reverse-saga (S2)"]
+    SAGASEAM["saga-coordinator -- seam (S2)"]
     ASM["audit-assembler -- Merkle, anchor, witness (S4)"]
+  end
+  subgraph SUB["consumed substrates -- behind the seams, swappable"]
+    CEDAR["cedar entities -- MVP default"]
+    OPENFGA["openfga -- deferred adapter"]
+    DBOS["dbos -- now"]
+    TEMPORAL["temporal -- contingency"]
   end
   subgraph SDK["sdk"]
     PY["python"]
@@ -39,7 +47,13 @@ flowchart TB
   PEP --> IFC
   PEP --> AC
   PEP -->|gRPC| RES
+  RES --> RELSEAM
+  RELSEAM --> CEDAR
+  RELSEAM -.->|deferred| OPENFGA
   AC --> ORCH
+  ORCH --> SAGASEAM
+  SAGASEAM --> DBOS
+  SAGASEAM -.->|contingency| TEMPORAL
   ORCH --> CONN
   RES --> POL
   AC --> ASM
@@ -58,11 +72,16 @@ provna/
     ifc-engine/               # S1: lattice, sink-policy, P/Q isolation, taint propagation
     action-contract/          # S2 inline: semantic effect key (idempotency), dry-run, execute
   control-plane/              # Python/TS -- orchestration, off the critical path
-    authz-resolver/           # S3: AND-gate, caveat-attenuation, transitive revocation,
-                              #     behavioral/temporal admission (wraps Cedar PDP; OpenFGA deferred
-                              #     behind a relationship-resolver interface until a partner is provably ReBAC)
-    compensation-orchestrator/# S2: saga + reverse-saga driver, observe-probe (over DBOS; Temporal kept
-                              #     as a seam-isolated contingency, not a scheduled migration)
+    authz-resolver/           # S3 BUILT: AND-gate, caveat-attenuation, transitive revocation,
+                              #     behavioral/temporal admission
+      pdp/                    #   consumed policy decision point -- embedded Cedar
+      relationship-resolver/  #   SEAM: relationship / ReBAC queries behind one interface
+        cedar-entities/       #     default (MVP) -- relationships modeled as Cedar entities
+        openfga/              #     deferred adapter -- wired only when a partner is provably ReBAC
+    compensation-orchestrator/# S2 BUILT: saga + reverse-saga driver, observe-probe, dry-run
+      saga-coordinator/       #   SEAM: durable-execution substrate behind one interface
+        dbos/                 #     DBOS Transact adapter (MVP + early production; default)
+        temporal/             #     contingency adapter -- pre-spiked, wired only if a trigger fires
     audit-assembler/          # S4: hash-chain -> Merkle -> self-hosted transparency log (Tessera) +
                               #     internal HSM-backed RFC3161 TSA + cross-org witness cosignature + JCS witness
   sdk/
@@ -85,6 +104,7 @@ provna/
 
 - **data-plane vs control-plane.** The data-plane is the only inline, latency-sensitive code and is the only place a fail-closed decision is enforced; the control-plane holds anything that can run off the synchronous path. They talk over the gRPC ActionGuard contract in `sdk/proto`, mapped one-to-one onto `decide` / `commit` / `compensate` (see [architecture/action-lifecycle.md](architecture/action-lifecycle.md)).
 - **Build vs consume inside the tree.** `ifc-engine` (S1) and `connector-compensation-catalog` (S2) are the real IP. `authz-resolver` wraps a consumed PDP (Cedar, with OpenFGA deferred behind a relationship-resolver interface until a partner is provably ReBAC), `compensation-orchestrator` drives a consumed saga substrate (DBOS, with Temporal kept as a seam-isolated contingency rather than a scheduled migration), and `audit-assembler` assembles consumed primitives (OTel + a self-hosted transparency log (Tessera) + an internal HSM-backed RFC3161 TSA + a cross-organization witness cosignature, with Rekor v2 as the reference design). The canonical boundary is [architecture/build-vs-consume.md](architecture/build-vs-consume.md).
+- **Substrate-swap seams.** Two consumed substrates each sit behind a single named interface, so the choice stays reversible without touching the code above it. The `saga-coordinator` interface fronts the durable-execution substrate — DBOS now, with a pre-spiked Temporal adapter wired only if a trigger fires (multi-tenant fan-out, a Postgres ceiling, or a buyer mandate). The `relationship-resolver` interface fronts relationship / ReBAC queries — Cedar entities now, with OpenFGA added only when a design partner's entitlements are provably ReBAC. Swapping a backend is an adapter change inside the seam, not a rewrite of the resolver or orchestrator above it. These seams are the structural form of the decisions in [tech-stack.md](tech-stack.md).
 - **Open-source vs proprietary.** `policy/` and `sdk/` are intended to be open (credibility); `ifc-engine/`, `connector-compensation-catalog/`, and the evidence store stay proprietary.
 - **Vendor-neutral surfaces.** The SDK, an MCP hook, and a proxy all feed the same PEP, so host runtimes (the first reference integration, plus LangChain / OpenAI-SDK / custom on the roadmap) plug into one seam. See [architecture/integration-surfaces.md](architecture/integration-surfaces.md).
 

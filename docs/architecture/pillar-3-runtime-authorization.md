@@ -1,8 +1,8 @@
 # Pillar 3 — Runtime Authorization
 
-**Status:** Plan (pre-build)
+**Status:** Planned (pre-build)
 **Last updated: 2026-06-24**
-**Related:** [../decisions/0006-s3-and-gate-attenuation-behavioral-admission.md](../decisions/0006-s3-and-gate-attenuation-behavioral-admission.md) · [./action-lifecycle.md](./action-lifecycle.md) · [./build-vs-consume.md](./build-vs-consume.md) · [./pillar-4-tamper-evident-audit.md](./pillar-4-tamper-evident-audit.md) · [../tech-stack.md](../tech-stack.md) · [../positioning.md](../positioning.md)
+**Related:** [../decisions/0006-s3-and-gate-attenuation-behavioral-admission.md](../decisions/0006-s3-and-gate-attenuation-behavioral-admission.md), [action-lifecycle.md](action-lifecycle.md), [build-vs-consume.md](build-vs-consume.md), [pillar-4-tamper-evident-audit.md](pillar-4-tamper-evident-audit.md), [../tech-stack.md](../tech-stack.md), [../positioning.md](../positioning.md)
 
 ---
 

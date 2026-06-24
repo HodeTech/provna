@@ -1,6 +1,6 @@
 # Action Lifecycle -- The Guarded Saga Step
 
-**Status:** Planning (pre-build)
+**Status:** Planned (pre-build)
 **Last updated: 2026-06-24**
 **Related:** [overview.md](overview.md), [pillar-1-information-flow-control.md](pillar-1-information-flow-control.md), [pillar-2-transactional-compensation.md](pillar-2-transactional-compensation.md), [pillar-3-runtime-authorization.md](pillar-3-runtime-authorization.md), [pillar-4-tamper-evident-audit.md](pillar-4-tamper-evident-audit.md), [../compliance/regulatory-mapping.md](../compliance/regulatory-mapping.md)
 
